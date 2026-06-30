@@ -1,0 +1,24 @@
+{
+  "name": "Counseling Compass",
+  "short_name": "Compass",
+  "description": "상담대학원 학습 플래너 · 연구노트 · 자격 체크리스트",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#eef0f2",
+  "theme_color": "#2b3a55",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
