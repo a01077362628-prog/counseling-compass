@@ -550,6 +550,7 @@
   .cc-book-form textarea { min-height: 80px; resize: vertical; }
   .cc-form-label { font-size: 12px; font-weight: 700; color: var(--ink-soft); margin-bottom: 3px; display: block; }
   .cc-form-save-btn { border: none; background: var(--rose); color: white; border-radius: 8px; padding: 9px 18px; font-size: 13px; cursor: pointer; font-family: var(--body); font-weight: 600; }
+  .cc-form-cancel-btn { border: 1px solid var(--line); background: var(--paper); color: var(--ink-soft); border-radius: 8px; padding: 9px 16px; font-size: 13px; cursor: pointer; font-family: var(--body); font-weight: 600; }
   .cc-book-card { border: 1px solid var(--line); border-radius: 10px; padding: 14px; margin-bottom: 10px; }
   .cc-book-card-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; margin-bottom: 6px; }
   .cc-book-title { font-family: var(--display); font-size: 15px; font-weight: 700; }
@@ -677,14 +678,17 @@
       <label class="cc-form-label">용어</label>
       <div style="display:flex;gap:6px;margin-bottom:8px;">
         <input id="cc-dict-term" type="text" placeholder="예: 전이 (Transference)" maxlength="80" style="margin-bottom:0;flex:1"/>
-        <button class="cc-dict-ai-btn" id="cc-dict-ai-btn" title="Claude AI에서 검색">🤖 Claude 검색</button>
+        <button class="cc-dict-ai-btn" id="cc-dict-ai-btn" title="Claude AI에서 검색">🤖 Claude</button>
         <button class="cc-dict-naver-btn" id="cc-dict-naver-btn" title="네이버에서 검색">🔍 네이버</button>
       </div>
       <label class="cc-form-label">정의 (직접 입력 또는 AI 결과 수정)</label>
       <textarea id="cc-dict-def" placeholder="나만의 말로 정의해보세요…"></textarea>
       <label class="cc-form-label">출처 / 이론 (선택)</label>
       <input id="cc-dict-src" type="text" placeholder="예: 정신분석이론, 상담이론과 실제 p.42"/>
-      <button class="cc-form-save-btn" id="cc-dict-save-btn">사전에 추가</button>
+      <div style="display:flex;gap:8px;">
+        <button class="cc-form-save-btn" id="cc-dict-save-btn">사전에 추가</button>
+        <button class="cc-form-cancel-btn" id="cc-dict-cancel-btn" style="display:none">취소</button>
+      </div>
     </div>
     <div id="cc-dict-list"></div>
   </div>
@@ -705,8 +709,18 @@
       <label class="cc-form-label">핵심 내용</label>
       <textarea id="cc-book-key" placeholder="핵심 개념, 인상 깊은 내용…" style="min-height:80px"></textarea>
       <label class="cc-form-label">나의 생각 / 적용점</label>
-      <textarea id="cc-book-reflection" placeholder="상담 공부나 실습에 어떻게 연결할 수 있을지…" style="min-height:70px"></textarea>
-      <button class="cc-form-save-btn" id="cc-book-save-btn">독서노트 추가</button>
+      <textarea id="cc-book-reflection" placeholder="이 책/논문을 읽고 느낀 점, 나의 생각…" style="min-height:70px"></textarea>
+      <div style="display:flex;gap:8px;">
+        <button class="cc-form-save-btn" id="cc-book-save-btn">독서노트 추가</button>
+        <button class="cc-form-cancel-btn" id="cc-book-cancel-btn" style="display:none">취소</button>
+      </div>
+    </div>
+    <div class="cc-filter-row" id="cc-book-filter-row">
+      <button class="cc-tag-btn selected" data-bookfilter="all">전체</button>
+      <button class="cc-tag-btn" data-bookfilter="book">📗 책</button>
+      <button class="cc-tag-btn" data-bookfilter="paper">📄 논문</button>
+      <button class="cc-tag-btn" data-bookfilter="article">📰 아티클</button>
+      <button class="cc-tag-btn" data-bookfilter="other">기타</button>
     </div>
     <div id="cc-book-list"></div>
   </div>
@@ -1578,12 +1592,13 @@
           <button class="cc-pager-btn" id="cc-notes-next" ${notesPage===totalPages-1?'disabled':''}>다음 ›</button>
         </div>` : ''}
       </div>
-      ${paginated.map(n => `
+      ${paginated.map((n, i) => `
       <div class="cc-note-card tag-${n.tag}">
         <div class="cc-note-meta">
+          <span style="font-size:11.5px;color:var(--ink-soft);margin-right:2px;">${notesPage * NOTES_PER_PAGE + i + 1}.</span>
           <span class="cc-note-tag">${tagLabel[n.tag] || n.tag}</span>
           <span class="cc-note-spacer"></span>
-          <span class="cc-note-date">${formatDate(n.created)}</span>
+          <span class="cc-note-date">${formatDateTime(n.created)}</span>
           <button class="cc-del-btn" data-editnote="${n.id}" style="color:var(--sage);opacity:1">수정</button>
           <button class="cc-del-btn" data-delnote="${n.id}">삭제</button>
         </div>
@@ -1907,6 +1922,8 @@
   let editingDictId = null;
   let dictPage = 0;
   const DICT_PER_PAGE = 10;
+  let editingReadingId = null;
+  let selectedBookFilter = 'all';
 
   function renderDict() {
     const root = document.getElementById('cc-dict-list');
@@ -1934,11 +1951,13 @@
           <button class="cc-pager-btn" id="cc-dict-next" ${dictPage===totalPages-1?'disabled':''}>›</button>
         </div>` : ''}
       </div>
-      ${paginated.map(e => `
+      ${paginated.map((e, i) => `
       <div class="cc-dict-entry">
         <div class="cc-dict-term">
+          <span style="color:var(--ink-soft);font-size:12px;font-weight:400;margin-right:4px;">${dictPage * DICT_PER_PAGE + i + 1}.</span>
           ${escapeHtml(e.term)}
-          <div style="display:flex;gap:4px;">
+          <div style="display:flex;gap:4px;align-items:center;">
+            <span style="font-size:11px;color:var(--ink-soft);font-weight:400;">${e.created ? formatDateTime(e.created) : ''}</span>
             <button class="cc-del-btn" data-dictedit="${e.id}" style="color:var(--sage);opacity:1">수정</button>
             <button class="cc-del-btn" data-dictdelete="${e.id}">삭제</button>
           </div>
@@ -1968,7 +1987,7 @@
         document.getElementById('cc-dict-def').value = e.definition;
         document.getElementById('cc-dict-src').value = e.source || '';
         document.getElementById('cc-dict-save-btn').textContent = '수정 완료';
-        document.getElementById('cc-dict-save-btn').dataset.editId = id;
+        document.getElementById('cc-dict-cancel-btn').style.display = '';
         document.getElementById('cc-dict-term').scrollIntoView({ behavior: 'smooth', block: 'center' });
         document.getElementById('cc-dict-term').focus();
       });
@@ -1999,6 +2018,16 @@
     const prompt = `상담심리 대학원생이에요. 상담사전 앱에 저장할 용어 정의를 도와주세요.\n\n"${term}"의 상담·심리학적 정의를 한국어로 3~5문장으로 설명해주세요. 핵심 개념, 이론적 배경, 상담 현장에서의 의미를 포함해주세요.`;
     window.open(`https://claude.ai/new?q=${encodeURIComponent(prompt)}`, '_blank');
   });
+  function resetDictForm() {
+    editingDictId = null;
+    document.getElementById('cc-dict-term').value = '';
+    document.getElementById('cc-dict-def').value = '';
+    document.getElementById('cc-dict-src').value = '';
+    document.getElementById('cc-dict-save-btn').textContent = '사전에 추가';
+    document.getElementById('cc-dict-cancel-btn').style.display = 'none';
+  }
+  document.getElementById('cc-dict-cancel-btn') && document.getElementById('cc-dict-cancel-btn').addEventListener('click', resetDictForm);
+
   document.getElementById('cc-dict-save-btn') && document.getElementById('cc-dict-save-btn').addEventListener('click', async () => {
     const term = document.getElementById('cc-dict-term').value.trim();
     const def = document.getElementById('cc-dict-def').value.trim();
@@ -2006,51 +2035,120 @@
     if (editingDictId) {
       const e = dictEntries.find(x => x.id === editingDictId);
       if (e) { e.term = term; e.definition = def; e.source = document.getElementById('cc-dict-src').value.trim(); }
-      editingDictId = null;
-      document.getElementById('cc-dict-save-btn').textContent = '사전에 추가';
     } else {
       dictEntries.push({ id: uid(), term, definition: def, source: document.getElementById('cc-dict-src').value.trim(), created: Date.now() });
     }
-    document.getElementById('cc-dict-term').value = '';
-    document.getElementById('cc-dict-def').value = '';
-    document.getElementById('cc-dict-src').value = '';
+    resetDictForm();
     await saveDictEntries(); renderDict();
   });
 
   // ── Reading Notes ─────────────────────────────────────────────────────────
   const bookTypeLabel = { book: '📗 책', paper: '📄 논문', article: '📰 아티클', other: '기타' };
+
+  function resetBookForm() {
+    editingReadingId = null;
+    ['cc-book-title','cc-book-author','cc-book-key','cc-book-reflection'].forEach(id => { const el = document.getElementById(id); if(el) el.value = ''; });
+    const sel = document.getElementById('cc-book-type'); if (sel) sel.value = 'book';
+    const saveBtn = document.getElementById('cc-book-save-btn');
+    const cancelBtn = document.getElementById('cc-book-cancel-btn');
+    if (saveBtn) saveBtn.textContent = '독서노트 추가';
+    if (cancelBtn) cancelBtn.style.display = 'none';
+  }
+
   function renderReading() {
     const root = document.getElementById('cc-book-list');
     if (!root) return;
-    if (!readingEntries.length) { root.innerHTML = '<div class="cc-empty">아직 독서노트가 없어요. 읽은 책이나 논문을 추가해보세요!</div>'; return; }
-    const sorted = [...readingEntries].sort((a,b) => b.created - a.created);
-    root.innerHTML = sorted.map(e => `
+
+    const filtered = selectedBookFilter === 'all'
+      ? [...readingEntries]
+      : readingEntries.filter(e => e.type === selectedBookFilter);
+
+    if (!filtered.length) {
+      root.innerHTML = `<div class="cc-empty">${selectedBookFilter !== 'all' ? '해당 유형의 독서노트가 없어요.' : '아직 독서노트가 없어요. 읽은 책이나 논문을 추가해보세요!'}</div>`;
+      return;
+    }
+
+    const sorted = [...filtered].sort((a,b) => b.created - a.created);
+
+    root.innerHTML = `<div class="cc-notes-meta-bar"><span>총 ${sorted.length}개</span></div>` +
+      sorted.map((e, i) => `
       <div class="cc-book-card">
         <div class="cc-book-card-head">
-          <div>
-            <div class="cc-book-title">${escapeHtml(e.title)}</div>
-            <div class="cc-book-author">${escapeHtml(e.author)}</div>
+          <div style="flex:1;min-width:0;">
+            <div class="cc-book-title">
+              <span style="color:var(--ink-soft);font-size:12px;font-weight:400;margin-right:4px;">${i+1}.</span>
+              ${escapeHtml(e.title)}
+            </div>
+            ${e.author ? `<div class="cc-book-author">${escapeHtml(e.author)}</div>` : ''}
+            <div style="font-size:11px;color:var(--ink-soft);margin-top:2px;">${e.created ? formatDateTime(e.created) : ''}</div>
           </div>
-          <div style="display:flex;align-items:center;gap:6px;">
+          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex:0 0 auto;">
             <span class="cc-book-type-badge">${escapeHtml(bookTypeLabel[e.type] || e.type)}</span>
-            <button class="cc-del-btn" data-bookdelete="${e.id}">삭제</button>
+            <div style="display:flex;gap:4px;">
+              <button class="cc-del-btn" data-bookedit="${e.id}" style="color:var(--sage);opacity:1">수정</button>
+              <button class="cc-del-btn" data-bookdelete="${e.id}">삭제</button>
+            </div>
           </div>
         </div>
         ${e.keyPoints ? `<div class="cc-book-section-label">핵심 내용</div><div class="cc-book-text">${escapeHtml(e.keyPoints)}</div>` : ''}
         ${e.reflection ? `<div class="cc-book-section-label" style="margin-top:10px;">나의 생각</div><div class="cc-book-text">${escapeHtml(e.reflection)}</div>` : ''}
       </div>`).join('');
+
+    root.querySelectorAll('[data-bookedit]').forEach(el => {
+      el.addEventListener('click', () => {
+        const id = el.getAttribute('data-bookedit');
+        const e = readingEntries.find(x => x.id === id);
+        if (!e) return;
+        editingReadingId = id;
+        document.getElementById('cc-book-title').value = e.title;
+        document.getElementById('cc-book-author').value = e.author || '';
+        document.getElementById('cc-book-type').value = e.type || 'book';
+        document.getElementById('cc-book-key').value = e.keyPoints || '';
+        document.getElementById('cc-book-reflection').value = e.reflection || '';
+        document.getElementById('cc-book-save-btn').textContent = '수정 완료';
+        document.getElementById('cc-book-cancel-btn').style.display = '';
+        document.getElementById('cc-book-title').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        document.getElementById('cc-book-title').focus();
+      });
+    });
     root.querySelectorAll('[data-bookdelete]').forEach(el => {
       el.addEventListener('click', async () => {
         readingEntries = readingEntries.filter(e => e.id !== el.getAttribute('data-bookdelete'));
+        if (editingReadingId === el.getAttribute('data-bookdelete')) resetBookForm();
         await saveReadingEntries(); renderReading();
       });
     });
   }
+
+  // book filter tabs
+  document.getElementById('cc-book-filter-row') && document.getElementById('cc-book-filter-row').querySelectorAll('[data-bookfilter]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      selectedBookFilter = btn.getAttribute('data-bookfilter');
+      document.getElementById('cc-book-filter-row').querySelectorAll('[data-bookfilter]').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      renderReading();
+    });
+  });
+
+  document.getElementById('cc-book-cancel-btn') && document.getElementById('cc-book-cancel-btn').addEventListener('click', () => { resetBookForm(); renderReading(); });
+
   document.getElementById('cc-book-save-btn') && document.getElementById('cc-book-save-btn').addEventListener('click', async () => {
     const title = document.getElementById('cc-book-title').value.trim();
     if (!title) return;
-    readingEntries.push({ id: uid(), title, author: document.getElementById('cc-book-author').value.trim(), type: document.getElementById('cc-book-type').value, keyPoints: document.getElementById('cc-book-key').value.trim(), reflection: document.getElementById('cc-book-reflection').value.trim(), created: Date.now() });
-    ['cc-book-title','cc-book-author','cc-book-key','cc-book-reflection'].forEach(id => document.getElementById(id).value = '');
+    const data = {
+      title,
+      author: document.getElementById('cc-book-author').value.trim(),
+      type: document.getElementById('cc-book-type').value,
+      keyPoints: document.getElementById('cc-book-key').value.trim(),
+      reflection: document.getElementById('cc-book-reflection').value.trim(),
+    };
+    if (editingReadingId) {
+      const e = readingEntries.find(x => x.id === editingReadingId);
+      if (e) Object.assign(e, data);
+    } else {
+      readingEntries.push({ id: uid(), ...data, created: Date.now() });
+    }
+    resetBookForm();
     await saveReadingEntries(); renderReading();
   });
 
@@ -2062,6 +2160,10 @@
   function formatDate(ts) {
     const d = new Date(ts);
     return `${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getDate()).padStart(2,'0')}`;
+  }
+  function formatDateTime(ts) {
+    const d = new Date(ts);
+    return `${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getDate()).padStart(2,'0')} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
   }
 
   loadData();
