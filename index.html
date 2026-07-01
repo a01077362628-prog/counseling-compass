@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
 <title>Counseling Compass</title>
 <meta name="description" content="상담자가 되어가는 평생 학습 시스템">
 <meta name="theme-color" content="#2b3a55">
@@ -11,15 +11,14 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Compass">
 <link rel="manifest" href="manifest.json">
-<link rel="icon" type="image/png" sizes="32x32"  href="icon-32.png">
+<link rel="icon" type="image/png" sizes="32x32" href="icon-32.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
-<link rel="apple-touch-icon" sizes="180x180"      href="icon-180.png">
+<link rel="apple-touch-icon" sizes="180x180" href="icon-180.png">
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 <style>
-  html, body { margin:0; padding:0; background:#eef0f2; min-height:100vh;
-               -webkit-tap-highlight-color:transparent; }
-  body { padding:12px; box-sizing:border-box; }
+  html,body{margin:0;padding:0;background:#eef0f2;min-height:100vh;-webkit-tap-highlight-color:transparent;}
+  body{padding:12px;box-sizing:border-box;}
 </style>
 </head>
 <body>
@@ -497,6 +496,12 @@
   .cc-dday-chip.soon { background: var(--rose); }
   .cc-dday-chip.today { background: var(--sage); }
   .cc-dday-chip .cc-dday-del { background: none; border: none; color: rgba(255,255,255,0.7); cursor: pointer; font-size: 11px; padding: 0 0 0 4px; }
+  .cc-dday-chip .cc-dday-chip-label { cursor: pointer; text-decoration: underline dotted rgba(255,255,255,0.5); }
+  .cc-dday-chip .cc-dday-chip-label:hover { opacity: 0.85; }
+  .cc-dday-chip .cc-dday-chip-num { opacity: 0.85; }
+  .cc-dday-edit-form { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; align-items: center; }
+  .cc-dday-edit-form input { border: 1px solid var(--line); border-radius: 8px; padding: 6px 8px; font-size: 12.5px; font-family: var(--body); }
+  .cc-dday-edit-form button { border: none; color: white; border-radius: 8px; padding: 6px 12px; font-size: 12.5px; cursor: pointer; font-family: var(--body); }
   .cc-dday-manage { background: #f7f7f9; border-radius: 10px; padding: 10px 14px; margin-bottom: 14px; }
 
   /* Goals */
@@ -508,7 +513,10 @@
   .cc-goal-item { display: flex; align-items: center; gap: 8px; padding: 7px 4px; border-bottom: 1px solid #f0f0f3; font-size: 13.5px; }
   .cc-goal-item:last-child { border-bottom: none; }
   .cc-goal-item input[type=checkbox] { width: 17px; height: 17px; accent-color: var(--rose); flex: 0 0 auto; cursor: pointer; }
-  .cc-goal-item span.done { text-decoration: line-through; color: var(--ink-soft); }
+  .cc-goal-item span.done { color: var(--ink-soft); }
+  .cc-goal-text { flex: 1; cursor: pointer; border-radius: 4px; padding: 1px 4px; }
+  .cc-goal-text:focus { outline: 1px solid var(--sage); background: white; cursor: text; }
+  .cc-goal-text[contenteditable=true] { cursor: text; }
   .cc-goal-semester { font-size: 11px; padding: 2px 7px; border-radius: 999px; background: var(--rose-soft); color: var(--rose); font-weight: 700; flex: 0 0 auto; }
 
   /* Subject tasks */
@@ -548,7 +556,17 @@
   .cc-book-author { font-size: 12px; color: var(--ink-soft); margin-bottom: 8px; }
   .cc-book-type-badge { font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 999px; background: var(--sage-soft); color: var(--sage); flex: 0 0 auto; }
   .cc-book-section-label { font-size: 11.5px; font-weight: 700; color: var(--ink-soft); margin: 8px 0 3px; }
-  .cc-book-text { font-size: 13px; line-height: 1.6; white-space: pre-wrap; color: var(--ink); }
+  .cc-pager-btn:not(:disabled):hover { background: var(--paper); }
+  .cc-dict-ai-btn { background: var(--ink); color: white; border: none; border-radius: 8px; padding: 8px 10px; font-size: 12px; cursor: pointer; font-family: var(--body); white-space: nowrap; }
+  .cc-dict-ai-btn:disabled { opacity: 0.5; cursor: wait; }
+  .cc-dict-naver-btn { background: #03c75a; color: white; border: none; border-radius: 8px; padding: 8px 10px; font-size: 12px; cursor: pointer; font-family: var(--body); white-space: nowrap; }
+  .cc-dict-ai-result { background: var(--sage-soft); border: 1px solid var(--sage); border-radius: 8px; padding: 12px; margin-bottom: 10px; font-size: 13px; line-height: 1.6; }
+  .cc-dict-ai-loading { color: var(--ink-soft); font-style: italic; }
+  .cc-dict-ai-text { color: var(--ink); margin-bottom: 8px; }
+  .cc-dict-ai-use-btn { border: none; background: var(--sage); color: white; border-radius: 6px; padding: 6px 12px; font-size: 12px; cursor: pointer; font-family: var(--body); }
+  .cc-notes-meta-bar { display: flex; align-items: center; justify-content: space-between; font-size: 12.5px; color: var(--ink-soft); margin-bottom: 10px; }
+  .cc-pager-btn { border: 1px solid var(--line); background: var(--paper-raised); border-radius: 8px; padding: 5px 12px; font-size: 12.5px; cursor: pointer; font-family: var(--body); color: var(--ink); }
+  .cc-pager-btn:disabled { opacity: 0.35; cursor: default; }
 </style>
 
 <div class="cc-header">
@@ -637,7 +655,10 @@
         </label>
       </div>
       <textarea id="cc-daylog-memo" placeholder="오늘 공부한 내용이나 메모 (선택)"></textarea>
-      <button class="cc-daylog-save" id="cc-daylog-save-btn">저장</button>
+      <div style="display:flex;gap:8px;margin-top:6px;">
+        <button class="cc-daylog-save" id="cc-daylog-save-btn">저장</button>
+        <button class="cc-daylog-save" id="cc-daylog-delete-btn" style="background:var(--ink-soft);display:none">기록 삭제</button>
+      </div>
     </div>
   </div>
 
@@ -648,12 +669,19 @@
 
   <div id="cc-panel-dict" class="cc-hidden">
     <div class="cc-dict-search-wrap">
-      <input class="cc-dict-search" id="cc-dict-search" type="text" placeholder="🔍 용어 검색…"/>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <input class="cc-dict-search" id="cc-dict-search" type="text" placeholder="🔍 저장된 용어 검색…"/>
+      </div>
     </div>
     <div class="cc-dict-form" id="cc-dict-form">
       <label class="cc-form-label">용어</label>
-      <input id="cc-dict-term" type="text" placeholder="예: 전이 (Transference)" maxlength="80"/>
-      <label class="cc-form-label">정의</label>
+      <div style="display:flex;gap:6px;margin-bottom:8px;">
+        <input id="cc-dict-term" type="text" placeholder="예: 전이 (Transference)" maxlength="80" style="margin-bottom:0;flex:1"/>
+        <button class="cc-dict-ai-btn" id="cc-dict-ai-btn" title="AI로 정의 불러오기">🤖 AI 정의</button>
+        <button class="cc-dict-naver-btn" id="cc-dict-naver-btn" title="네이버에서 검색">🔍 검색</button>
+      </div>
+      <div id="cc-dict-ai-result" class="cc-dict-ai-result" style="display:none"></div>
+      <label class="cc-form-label">정의 (직접 입력 또는 AI 결과 수정)</label>
       <textarea id="cc-dict-def" placeholder="나만의 말로 정의해보세요…"></textarea>
       <label class="cc-form-label">출처 / 이론 (선택)</label>
       <input id="cc-dict-src" type="text" placeholder="예: 정신분석이론, 상담이론과 실제 p.42"/>
@@ -711,38 +739,15 @@
 </div>
 
 <script>
-  (function() {
-    const firebaseConfig = {
-      apiKey: "AIzaSyCYaoJJr7ZXJ3-JRXEDUb-UcnArRE4gfzs",
-      authDomain: "counseling-compass.firebaseapp.com",
-      projectId: "counseling-compass",
-      storageBucket: "counseling-compass.firebasestorage.app",
-      messagingSenderId: "666059547277",
-      appId: "1:666059547277:web:4b83eb09e7d5306f66f8c4"
-    };
-    if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore();
-    const DATA_DOC = db.collection('compass').doc('data');
-    window.storage = {
-      async get(key, shared) {
-        const snap = await DATA_DOC.get();
-        if (!snap.exists || snap.data()[key] === undefined) throw new Error('not found');
-        return { key, value: snap.data()[key], shared: !!shared };
-      },
-      async set(key, value, shared) {
-        await DATA_DOC.set({ [key]: value }, { merge: true });
-        return { key, value, shared: !!shared };
-      },
-      async delete(key, shared) {
-        await DATA_DOC.update({ [key]: firebase.firestore.FieldValue.delete() });
-        return { key, deleted: true, shared: !!shared };
-      },
-      async list(prefix, shared) {
-        const snap = await DATA_DOC.get();
-        const allKeys = snap.exists ? Object.keys(snap.data()) : [];
-        const keys = prefix ? allKeys.filter(k => k.startsWith(prefix)) : allKeys;
-        return { keys, prefix, shared: !!shared };
-      }
+  (function(){
+    const cfg={apiKey:"AIzaSyCYaoJJr7ZXJ3-JRXEDUb-UcnArRE4gfzs",authDomain:"counseling-compass.firebaseapp.com",projectId:"counseling-compass",storageBucket:"counseling-compass.firebasestorage.app",messagingSenderId:"666059547277",appId:"1:666059547277:web:4b83eb09e7d5306f66f8c4"};
+    if(!firebase.apps.length)firebase.initializeApp(cfg);
+    const db=firebase.firestore(),D=db.collection('compass').doc('data');
+    window.storage={
+      async get(k){const s=await D.get();if(!s.exists||s.data()[k]===undefined)throw new Error('nf');return{key:k,value:s.data()[k]};},
+      async set(k,v){await D.set({[k]:v},{merge:true});return{key:k,value:v};},
+      async delete(k){await D.update({[k]:firebase.firestore.FieldValue.delete()});return{key:k};},
+      async list(p){const s=await D.get();const a=s.exists?Object.keys(s.data()):[];return{keys:p?a.filter(x=>x.startsWith(p)):a};}
     };
   })();
 
@@ -1126,6 +1131,8 @@
     document.getElementById('cc-daylog-date').textContent = label;
     document.getElementById('cc-daylog-checkbox').checked = !!log.studied;
     document.getElementById('cc-daylog-memo').value = log.memo || '';
+    const delBtn = document.getElementById('cc-daylog-delete-btn');
+    if (delBtn) delBtn.style.display = dailyLogs[key] ? '' : 'none';
   }
 
   document.getElementById('cc-cal-prev').addEventListener('click', () => {
@@ -1141,9 +1148,16 @@
     const memo = document.getElementById('cc-daylog-memo').value;
     dailyLogs[selectedDay] = { studied, memo };
     await saveDailyLogs();
-    renderCalendar();
-    renderStreak();
-    updateCompass();
+    renderCalendar(); renderStreak(); updateCompass();
+    const delBtn = document.getElementById('cc-daylog-delete-btn');
+    if (delBtn) delBtn.style.display = '';
+  });
+  document.getElementById('cc-daylog-delete-btn') && document.getElementById('cc-daylog-delete-btn').addEventListener('click', async () => {
+    if (!confirm(`${selectedDay} 기록을 삭제할까요?`)) return;
+    delete dailyLogs[selectedDay];
+    await saveDailyLogs();
+    renderCalendar(); renderStreak(); updateCompass();
+    selectDay(selectedDay);
   });
 
   function subjectProgress(s) {
@@ -1539,6 +1553,9 @@
     });
   }
 
+  let notesPage = 0;
+  const NOTES_PER_PAGE = 10;
+
   function renderNotes() {
     const root = document.getElementById('cc-notes-list');
     const filtered = selectedFilter === 'all' ? notes : notes.filter(n => n.tag === selectedFilter);
@@ -1547,7 +1564,20 @@
       return;
     }
     const sorted = [...filtered].sort((a,b) => b.created - a.created);
-    root.innerHTML = sorted.map(n => `
+    const totalPages = Math.ceil(sorted.length / NOTES_PER_PAGE);
+    if (notesPage >= totalPages) notesPage = totalPages - 1;
+    const paginated = sorted.slice(notesPage * NOTES_PER_PAGE, (notesPage + 1) * NOTES_PER_PAGE);
+
+    root.innerHTML = `
+      <div class="cc-notes-meta-bar">
+        <span>총 ${sorted.length}개</span>
+        ${totalPages > 1 ? `<div class="cc-notes-pager">
+          <button class="cc-pager-btn" id="cc-notes-prev" ${notesPage===0?'disabled':''}>‹ 이전</button>
+          <span>${notesPage+1} / ${totalPages}</span>
+          <button class="cc-pager-btn" id="cc-notes-next" ${notesPage===totalPages-1?'disabled':''}>다음 ›</button>
+        </div>` : ''}
+      </div>
+      ${paginated.map(n => `
       <div class="cc-note-card tag-${n.tag}">
         <div class="cc-note-meta">
           <span class="cc-note-tag">${tagLabel[n.tag] || n.tag}</span>
@@ -1556,17 +1586,23 @@
           <button class="cc-del-btn" data-delnote="${n.id}">삭제</button>
         </div>
         <div class="cc-note-text">${escapeHtml(n.text)}</div>
-      </div>
-    `).join('');
+      </div>`).join('')}
+      ${totalPages > 1 ? `<div class="cc-notes-meta-bar" style="margin-top:8px">
+        <button class="cc-pager-btn" id="cc-notes-prev2" ${notesPage===0?'disabled':''}>‹ 이전</button>
+        <span>${notesPage+1} / ${totalPages}</span>
+        <button class="cc-pager-btn" id="cc-notes-next2" ${notesPage===totalPages-1?'disabled':''}>다음 ›</button>
+      </div>` : ''}
+    `;
     root.querySelectorAll('[data-delnote]').forEach(el => {
       el.addEventListener('click', async () => {
-        const id = el.getAttribute('data-delnote');
-        notes = notes.filter(n => n.id !== id);
-        await saveNotes();
-        renderNotes();
-        updateCompass();
+        notes = notes.filter(n => n.id !== el.getAttribute('data-delnote'));
+        await saveNotes(); renderNotes(); updateCompass();
       });
     });
+    root.querySelector('#cc-notes-prev') && root.querySelector('#cc-notes-prev').addEventListener('click', () => { notesPage--; renderNotes(); });
+    root.querySelector('#cc-notes-next') && root.querySelector('#cc-notes-next').addEventListener('click', () => { notesPage++; renderNotes(); });
+    root.querySelector('#cc-notes-prev2') && root.querySelector('#cc-notes-prev2').addEventListener('click', () => { notesPage--; renderNotes(); });
+    root.querySelector('#cc-notes-next2') && root.querySelector('#cc-notes-next2').addEventListener('click', () => { notesPage++; renderNotes(); });
   }
 
   document.getElementById('cc-tag-row').querySelectorAll('.cc-tag-btn').forEach(btn => {
@@ -1580,6 +1616,7 @@
   document.getElementById('cc-filter-row').querySelectorAll('.cc-tag-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       selectedFilter = btn.getAttribute('data-filter');
+      notesPage = 0;
       document.getElementById('cc-filter-row').querySelectorAll('.cc-tag-btn').forEach(b => b.classList.remove('selected'));
       btn.classList.add('selected');
       renderNotes();
@@ -1599,26 +1636,83 @@
 
   // ── D-Day ────────────────────────────────────────────────────────────────
   function renderDdays() {
-    const bar = document.getElementById('cc-dday-bar');
-    const chips = document.getElementById('cc-dday-chips');
     const today = new Date(); today.setHours(0,0,0,0);
-    const html = ddays.map(d => {
+    const chipsHtml = ddays.map(d => {
       const target = new Date(d.date + 'T00:00:00');
       const diff = Math.round((target - today) / 86400000);
       const label = diff > 0 ? `D-${diff}` : diff === 0 ? 'D-DAY' : `D+${Math.abs(diff)}`;
-      const cls = diff <= 7 && diff >= 0 ? 'cc-dday-chip soon' : diff === 0 ? 'cc-dday-chip today' : 'cc-dday-chip';
-      return `<span class="${cls}">${escapeHtml(d.label)} ${label}<button class="cc-dday-del" data-deldday="${d.id}">✕</button></span>`;
+      const cls = diff === 0 ? 'cc-dday-chip today' : (diff > 0 && diff <= 7) ? 'cc-dday-chip soon' : 'cc-dday-chip';
+      return `<span class="${cls}" data-ddid="${d.id}">
+        <span class="cc-dday-chip-label">${escapeHtml(d.label)}</span>
+        <span class="cc-dday-chip-num">${label}</span>
+        <button class="cc-dday-del" data-deldday="${d.id}" title="삭제">✕</button>
+      </span>`;
     }).join('');
-    if (bar) bar.innerHTML = html;
-    if (chips) chips.innerHTML = html;
-    document.querySelectorAll('[data-deldday]').forEach(el => {
-      el.addEventListener('click', async (e) => {
+
+    const editFormHtml = `<div class="cc-dday-edit-form" id="cc-dday-edit-form" style="display:none">
+      <input id="cc-dday-edit-label" type="text" maxlength="20" style="flex:0 0 90px"/>
+      <input id="cc-dday-edit-date" type="date"/>
+      <button id="cc-dday-edit-save-btn" style="background:var(--sage)">저장</button>
+      <button id="cc-dday-edit-cancel-btn" style="background:var(--ink-soft)">취소</button>
+    </div>`;
+
+    const bar = document.getElementById('cc-dday-bar');
+    if (bar) bar.innerHTML = chipsHtml;
+
+    const chips = document.getElementById('cc-dday-chips');
+    if (chips) {
+      chips.innerHTML = chipsHtml + editFormHtml;
+      // delete
+      chips.querySelectorAll('[data-deldday]').forEach(btn => {
+        btn.addEventListener('click', async (e) => {
+          e.stopPropagation();
+          ddays = ddays.filter(d => d.id !== btn.getAttribute('data-deldday'));
+          await saveDdays(); renderDdays();
+        });
+      });
+      // edit (click chip label)
+      chips.querySelectorAll('[data-ddid]').forEach(chip => {
+        chip.querySelector('.cc-dday-chip-label') && chip.querySelector('.cc-dday-chip-label').addEventListener('click', (e) => {
+          e.stopPropagation();
+          const id = chip.getAttribute('data-ddid');
+          const d = ddays.find(x => x.id === id);
+          if (!d) return;
+          const form = document.getElementById('cc-dday-edit-form');
+          document.getElementById('cc-dday-edit-label').value = d.label;
+          document.getElementById('cc-dday-edit-date').value = d.date;
+          form.dataset.editId = id;
+          form.style.display = 'flex';
+        });
+      });
+      // edit save
+      const saveBtn = document.getElementById('cc-dday-edit-save-btn');
+      if (saveBtn) saveBtn.addEventListener('click', async () => {
+        const form = document.getElementById('cc-dday-edit-form');
+        const id = form.dataset.editId;
+        const d = ddays.find(x => x.id === id);
+        if (d) {
+          d.label = document.getElementById('cc-dday-edit-label').value.trim() || d.label;
+          d.date  = document.getElementById('cc-dday-edit-date').value || d.date;
+          await saveDdays(); renderDdays();
+        }
+      });
+      // edit cancel
+      const cancelBtn = document.getElementById('cc-dday-edit-cancel-btn');
+      if (cancelBtn) cancelBtn.addEventListener('click', () => {
+        document.getElementById('cc-dday-edit-form').style.display = 'none';
+      });
+    }
+
+    // bar delete (top bar)
+    if (bar) bar.querySelectorAll('[data-deldday]').forEach(btn => {
+      btn.addEventListener('click', async (e) => {
         e.stopPropagation();
-        ddays = ddays.filter(d => d.id !== el.getAttribute('data-deldday'));
+        ddays = ddays.filter(d => d.id !== btn.getAttribute('data-deldday'));
         await saveDdays(); renderDdays();
       });
     });
   }
+
   document.getElementById('cc-dday-add-btn') && document.getElementById('cc-dday-add-btn').addEventListener('click', async () => {
     const label = document.getElementById('cc-dday-label').value.trim();
     const date = document.getElementById('cc-dday-date').value;
@@ -1631,33 +1725,51 @@
 
   // ── Goals ────────────────────────────────────────────────────────────────
   function renderGoals() {
-    const list = document.getElementById('cc-goals-list');
+    const root = document.getElementById('cc-goals-list');
     const count = document.getElementById('cc-goals-count');
     const body = document.getElementById('cc-goals-body');
     const caret = document.getElementById('cc-goals-caret');
-    if (!list) return;
+    if (!root) return;
     const done = goals.filter(g => g.done).length;
     if (count) count.textContent = `${done}/${goals.length}`;
     if (caret) caret.textContent = goalsOpen ? '▾' : '▸';
     if (body) body.style.display = goalsOpen ? '' : 'none';
-    list.innerHTML = goals.map(g => `
-      <div class="cc-goal-item">
+    root.innerHTML = goals.map(g => `
+      <div class="cc-goal-item" data-gid="${g.id}">
         <input type="checkbox" ${g.done ? 'checked' : ''} data-goalcheck="${g.id}"/>
-        <span class="${g.done ? 'done' : ''}">${escapeHtml(g.text)}</span>
+        <span class="cc-goal-text ${g.done ? 'done' : ''}" data-goaledit="${g.id}" contenteditable="false" title="탭하면 수정">${escapeHtml(g.text)}</span>
         <span class="cc-goal-semester">${escapeHtml(g.semester)}</span>
         <button class="cc-del-btn" data-goaldelete="${g.id}">삭제</button>
       </div>`).join('') || '<div style="font-size:13px;color:var(--ink-soft);padding:8px 0;">아직 목표가 없어요. 추가해보세요!</div>';
-    list.querySelectorAll('[data-goalcheck]').forEach(el => {
+
+    root.querySelectorAll('[data-goalcheck]').forEach(el => {
       el.addEventListener('change', async () => {
-        goals.find(g => g.id === el.getAttribute('data-goalcheck')).done = el.checked;
-        await saveGoals(); renderGoals();
+        const g = goals.find(x => x.id === el.getAttribute('data-goalcheck'));
+        if (g) { g.done = el.checked; await saveGoals(); renderGoals(); }
       });
     });
-    list.querySelectorAll('[data-goaldelete]').forEach(el => {
-      el.addEventListener('click', async () => {
+    root.querySelectorAll('[data-goaldelete]').forEach(el => {
+      el.addEventListener('click', async (e) => {
+        e.stopPropagation();
         goals = goals.filter(g => g.id !== el.getAttribute('data-goaldelete'));
         await saveGoals(); renderGoals();
       });
+    });
+    // inline edit: click text to edit
+    root.querySelectorAll('[data-goaledit]').forEach(span => {
+      span.addEventListener('click', () => {
+        span.contentEditable = 'true'; span.focus();
+        const range = document.createRange(); range.selectNodeContents(span);
+        const sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(range);
+      });
+      span.addEventListener('blur', async () => {
+        span.contentEditable = 'false';
+        const id = span.getAttribute('data-goaledit');
+        const g = goals.find(x => x.id === id);
+        if (g && span.textContent.trim()) { g.text = span.textContent.trim(); await saveGoals(); }
+        else renderGoals();
+      });
+      span.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); span.blur(); } });
     });
   }
   document.getElementById('cc-goals-head') && document.getElementById('cc-goals-head').addEventListener('click', () => {
@@ -1751,6 +1863,51 @@
     });
   }
   document.getElementById('cc-dict-search') && document.getElementById('cc-dict-search').addEventListener('input', e => { dictSearch = e.target.value; renderDict(); });
+
+  document.getElementById('cc-dict-naver-btn') && document.getElementById('cc-dict-naver-btn').addEventListener('click', () => {
+    const term = document.getElementById('cc-dict-term').value.trim();
+    if (!term) return alert('용어를 먼저 입력해주세요.');
+    window.open(`https://search.naver.com/search.naver?query=${encodeURIComponent(term + ' 상담 심리')}&where=web`, '_blank');
+  });
+
+  document.getElementById('cc-dict-ai-btn') && document.getElementById('cc-dict-ai-btn').addEventListener('click', async () => {
+    const term = document.getElementById('cc-dict-term').value.trim();
+    if (!term) return alert('용어를 먼저 입력해주세요.');
+    const resultEl = document.getElementById('cc-dict-ai-result');
+    const aiBtn = document.getElementById('cc-dict-ai-btn');
+    resultEl.style.display = 'block';
+    resultEl.innerHTML = '<span class="cc-dict-ai-loading">AI가 정의를 생성하는 중…</span>';
+    aiBtn.disabled = true;
+    try {
+      const res = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-6',
+          max_tokens: 600,
+          messages: [{
+            role: 'user',
+            content: `상담심리 대학원생을 위한 상담사전 앱입니다. "${term}"의 상담·심리학적 정의를 한국어로 3~5문장으로 설명해주세요. 핵심 개념, 이론적 배경, 상담 현장에서의 의미를 포함해주세요. 마크다운 없이 평문으로만 답해주세요.`
+          }]
+        })
+      });
+      const data = await res.json();
+      const text = data.content && data.content[0] && data.content[0].text;
+      if (text) {
+        resultEl.innerHTML = `<div class="cc-dict-ai-text">${escapeHtml(text)}</div>
+          <button class="cc-dict-ai-use-btn" id="cc-dict-ai-use-btn">이 정의 사용하기</button>`;
+        document.getElementById('cc-dict-ai-use-btn').addEventListener('click', () => {
+          document.getElementById('cc-dict-def').value = text;
+          resultEl.style.display = 'none';
+        });
+      } else {
+        resultEl.innerHTML = '<span style="color:var(--rose)">정의를 불러오지 못했어요. 직접 입력해주세요.</span>';
+      }
+    } catch(e) {
+      resultEl.innerHTML = '<span style="color:var(--rose)">오류가 발생했어요. 직접 입력해주세요.</span>';
+    }
+    aiBtn.disabled = false;
+  });
   document.getElementById('cc-dict-save-btn') && document.getElementById('cc-dict-save-btn').addEventListener('click', async () => {
     const term = document.getElementById('cc-dict-term').value.trim();
     const def = document.getElementById('cc-dict-def').value.trim();
