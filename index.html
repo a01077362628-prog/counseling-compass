@@ -272,7 +272,31 @@
   }
   .cc-loading { text-align: center; padding: 40px; color: var(--ink-soft); font-size: 13px; }
 
-  /* Topic memo */
+  /* Credits */
+  .cc-credits-total {
+    display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+    background: var(--ink); color: white; border-radius: 10px;
+    padding: 12px 16px; margin-bottom: 16px; font-size: 13.5px;
+  }
+  .cc-credits-total-num {
+    font-family: var(--display); font-size: 26px; font-weight: 700; color: #fff;
+  }
+  .cc-credits-breakdown { font-size: 12px; color: rgba(255,255,255,0.7); flex: 1; }
+  .cc-credit-badge {
+    font-size: 11px; font-weight: 700; padding: 2px 7px; border-radius: 999px;
+    background: var(--sage-soft); color: var(--sage); flex: 0 0 auto;
+    margin-left: 2px;
+  }
+  .cc-subject-credits {
+    font-size: 12px; color: var(--ink-soft); margin-left: 4px; font-weight: 600;
+  }
+  .cc-add-row input.credits-input {
+    flex: 0 0 52px; width: 52px; text-align: center;
+  }
+  .cc-add-row label.credits-label {
+    font-size: 12px; color: var(--ink-soft); white-space: nowrap;
+  }
+
   .cc-topic { flex-wrap: wrap; }
   .cc-topic-memo {
     flex-basis: 100%;
@@ -461,6 +485,7 @@
   <div id="cc-loading" class="cc-loading">불러오는 중…</div>
 
   <div id="cc-panel-planner" class="cc-hidden">
+    <div id="cc-credits-total" class="cc-credits-total" style="display:none"></div>
     <div id="cc-subjects"></div>
     <div class="cc-new-subject">
       <input id="cc-new-subject-input" type="text" placeholder="새 과목 추가 (예: 상담윤리)" maxlength="40"/>
@@ -521,7 +546,8 @@
 <div class="cc-toast" id="cc-toast">저장됨</div>
 </div>
 
-<script>  (function() {
+<script>
+  (function() {
     const firebaseConfig = {
       apiKey: "AIzaSyCYaoJJr7ZXJ3-JRXEDUb-UcnArRE4gfzs",
       authDomain: "counseling-compass.firebaseapp.com",
@@ -530,17 +556,13 @@
       messagingSenderId: "666059547277",
       appId: "1:666059547277:web:4b83eb09e7d5306f66f8c4"
     };
-
     if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
     const DATA_DOC = db.collection('compass').doc('data');
-
     window.storage = {
       async get(key, shared) {
         const snap = await DATA_DOC.get();
-        if (!snap.exists || snap.data()[key] === undefined) {
-          throw new Error('not found');
-        }
+        if (!snap.exists || snap.data()[key] === undefined) throw new Error('not found');
         return { key, value: snap.data()[key], shared: !!shared };
       },
       async set(key, value, shared) {
@@ -582,13 +604,13 @@
 
   const GRAD_COURSE_SUBJECTS = [
     { id: 'g1', name: '1학차 수강과목', topics: [
-      { id: 'g1t1', name: '가족상담 및 치료', done: true, memo: '' },
-      { id: 'g1t2', name: '상담이론과 실제', done: true, memo: '' },
+      { id: 'g1t1', name: '가족상담 및 치료', done: true, memo: '', credits: 3 },
+      { id: 'g1t2', name: '상담이론과 실제', done: true, memo: '', credits: 3 },
     ]},
     { id: 'g2', name: '2학차 수강과목', topics: [
-      { id: 'g2t1', name: '상담윤리', done: true, memo: '' },
-      { id: 'g2t2', name: '이상심리 및 심리치료', done: true, memo: '' },
-      { id: 'g2t3', name: '실존과 심리치료의 만남', done: true, memo: '' },
+      { id: 'g2t1', name: '상담윤리', done: true, memo: '', credits: 3 },
+      { id: 'g2t2', name: '이상심리 및 심리치료', done: true, memo: '', credits: 3 },
+      { id: 'g2t3', name: '실존과 심리치료의 만남', done: true, memo: '', credits: 2 },
     ]},
   ];
 
@@ -744,6 +766,17 @@
     if (!hasGrad) {
       subjects = [...GRAD_COURSE_SUBJECTS, ...subjects];
       await saveSubjects();
+    } else {
+      // migrate credits onto existing grad topics that lack them
+      const creditMap = {};
+      GRAD_COURSE_SUBJECTS.forEach(s => s.topics.forEach(t => { creditMap[t.id] = t.credits; }));
+      let changed = false;
+      subjects.forEach(s => s.topics.forEach(t => {
+        if (t.credits === undefined && creditMap[t.id] !== undefined) {
+          t.credits = creditMap[t.id]; changed = true;
+        }
+      }));
+      if (changed) await saveSubjects();
     }
 
     document.getElementById('cc-loading').classList.add('cc-hidden');
@@ -940,6 +973,27 @@
     return Math.round((s.topics.filter(t => t.done).length / s.topics.length) * 100);
   }
 
+  function renderCreditsTotal() {
+    const el = document.getElementById('cc-credits-total');
+    // Only count subjects that are "수강과목" (grad enrolled)
+    const gradSubjects = subjects.filter(s => s.name.includes('수강과목'));
+    if (!gradSubjects.length) { el.style.display = 'none'; return; }
+
+    let total = 0;
+    const breakdown = gradSubjects.map(s => {
+      const sub = s.topics.reduce((sum, t) => sum + (Number(t.credits) || 0), 0);
+      total += sub;
+      return `${s.name.replace('수강과목','').trim()}: ${sub}학점`;
+    }).join(' &nbsp;|&nbsp; ');
+
+    el.style.display = 'flex';
+    el.innerHTML = `
+      <span class="cc-credits-total-num">${total}</span>
+      <span>학점 이수</span>
+      <span class="cc-credits-breakdown">${breakdown}</span>
+    `;
+  }
+
   function renderSubjects() {
     const root = document.getElementById('cc-subjects');
     if (!subjects.length) {
@@ -948,6 +1002,8 @@
     }
     root.innerHTML = subjects.map((s, sIdx) => {
       const pct = subjectProgress(s);
+      const isGrad = s.name.includes('수강과목');
+      const subCredits = isGrad ? s.topics.reduce((sum, t) => sum + (Number(t.credits) || 0), 0) : 0;
       return `
       <div class="cc-subject" data-sid="${s.id}">
         <div class="cc-subject-head" data-toggle="${s.id}">
@@ -957,6 +1013,7 @@
             <button class="cc-order-btn" data-subjdown="${s.id}" ${sIdx === subjects.length - 1 ? 'disabled' : ''} title="아래로">▼</button>
           </div>
           <span class="cc-subject-name">${escapeHtml(s.name)}</span>
+          ${isGrad ? `<span class="cc-subject-credits">${subCredits}학점</span>` : ''}
           <div class="cc-progress-wrap"><div class="cc-progress-bar" style="width:${pct}%"></div></div>
           <span class="cc-progress-pct">${pct}%</span>
         </div>
@@ -969,6 +1026,7 @@
               </div>
               <input type="checkbox" ${t.done ? 'checked' : ''} data-check="${s.id}|${t.id}"/>
               <span class="cc-topic-text ${t.done ? 'done' : ''}">${escapeHtml(t.name)}</span>
+              ${isGrad && t.credits ? `<span class="cc-credit-badge">${t.credits}학점</span>` : ''}
               <button class="cc-memo-toggle ${t.memo ? 'has-memo' : ''}" data-memotoggle="${s.id}|${t.id}" title="메모">✎</button>
               <button class="cc-del-btn" data-deltopic="${s.id}|${t.id}">삭제</button>
               <textarea class="cc-topic-memo" placeholder="이 항목에 대한 메모…" data-memo="${s.id}|${t.id}">${escapeHtml(t.memo || '')}</textarea>
@@ -976,6 +1034,7 @@
           `).join('') || '<div class="cc-empty" style="padding:14px 0;">항목이 없어요</div>'}
           <div class="cc-add-row">
             <input type="text" placeholder="새 항목 추가" data-newtopic="${s.id}" maxlength="60"/>
+            ${isGrad ? `<label class="credits-label">학점 <input type="number" class="credits-input" data-newcredits="${s.id}" min="1" max="6" value="3"/></label>` : ''}
             <button data-addtopic="${s.id}">추가</button>
           </div>
         </div>
@@ -1068,7 +1127,9 @@
         const val = input.value.trim();
         if (!val) return;
         const s = subjects.find(x => x.id === sid);
-        s.topics.push({ id: uid(), name: val, done: false, memo: '' });
+        const creditsInput = root.querySelector(`[data-newcredits="${sid}"]`);
+        const credits = creditsInput ? (Number(creditsInput.value) || 3) : 0;
+        s.topics.push({ id: uid(), name: val, done: false, memo: '', credits });
         input.value = '';
         await saveSubjects();
         renderSubjects();
@@ -1084,6 +1145,7 @@
 
     const qualRefEl = document.getElementById('cc-qual-ref');
     if (qualRefEl) renderQualRef();
+    renderCreditsTotal();
   }
 
   document.getElementById('cc-new-subject-btn').addEventListener('click', async () => {
