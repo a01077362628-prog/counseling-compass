@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Counseling Compass</title>
-<meta name="description" content="상담대학원 학습 플래너 · 연구노트 · 자격 체크리스트">
+<meta name="description" content="상담자가 되어가는 평생 학습 시스템">
 <meta name="theme-color" content="#2b3a55">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -185,7 +185,7 @@
     flex: 0 0 auto;
     cursor: pointer;
   }
-  .cc-topic span.done { text-decoration: line-through; color: var(--ink-soft); }
+  .cc-topic span.done { text-decoration: none; color: var(--ink); }
   .cc-subject--grad .cc-topic span.done { text-decoration: none; color: var(--ink); }
   .cc-topic-text { flex: 1; }
   .cc-del-btn {
@@ -273,7 +273,40 @@
   }
   .cc-loading { text-align: center; padding: 40px; color: var(--ink-soft); font-size: 13px; }
 
-  /* Credits */
+  /* Graduation tracking */
+  .cc-grad-track {
+    background: var(--paper-raised); border: 1px solid var(--line); border-radius: 12px;
+    padding: 16px; margin-bottom: 16px;
+  }
+  .cc-grad-track-title { font-family: var(--display); font-weight: 700; font-size: 15px; margin-bottom: 12px; color: var(--ink); }
+  .cc-grad-bar-row { margin-bottom: 10px; }
+  .cc-grad-bar-label { display: flex; justify-content: space-between; font-size: 12.5px; color: var(--ink-soft); margin-bottom: 4px; }
+  .cc-grad-bar-label strong { color: var(--ink); }
+  .cc-grad-bar-wrap { height: 8px; background: var(--line); border-radius: 4px; overflow: hidden; }
+  .cc-grad-bar-fill { height: 100%; border-radius: 4px; transition: width .4s ease; }
+  .cc-grad-bar-fill.total { background: var(--ink); }
+  .cc-grad-bar-fill.req   { background: var(--rose); }
+  .cc-grad-bar-fill.adv   { background: var(--sage); }
+  .cc-course-type { font-size: 10.5px; font-weight: 700; padding: 1px 6px; border-radius: 999px; flex: 0 0 auto; }
+  .cc-course-type.req  { background: #fde8e5; color: var(--rose); }
+  .cc-course-type.adv  { background: var(--sage-soft); color: var(--sage); }
+  .cc-course-type.elec { background: #e9eaf2; color: var(--ink-soft); }
+
+  /* Qual progress bar */
+  .cc-qual-prog-wrap { height: 6px; background: var(--line); border-radius: 3px; overflow: hidden; margin-top: 4px; margin-bottom: 10px; }
+  .cc-qual-prog-fill { height: 100%; border-radius: 3px; background: var(--sage); transition: width .4s ease; }
+  .cc-qual-prog-fill.done { background: var(--sage); }
+  .cc-qual-prog-fill.warn { background: var(--rose); }
+  .cc-qual-pct { font-size: 11.5px; font-weight: 700; }
+  .cc-qual-pct.done { color: var(--sage); }
+  .cc-qual-pct.warn { color: var(--rose); }
+
+  /* Tracker progress */
+  .cc-tracker-prog { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+  .cc-tracker-prog-bar { flex: 1; height: 8px; background: var(--line); border-radius: 4px; overflow: hidden; }
+  .cc-tracker-prog-fill { height: 100%; background: var(--sage); border-radius: 4px; transition: width .4s ease; }
+  .cc-tracker-pct { font-size: 12px; font-weight: 700; color: var(--sage); min-width: 36px; text-align: right; }
+
   .cc-credits-total {
     display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
     background: var(--ink); color: white; border-radius: 10px;
@@ -457,6 +490,65 @@
     pointer-events: none; z-index: 50; white-space: nowrap;
   }
   .cc-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  /* D-Day */
+  .cc-dday-bar { display: flex; gap: 8px; flex-wrap: wrap; padding: 10px 28px 0; background: var(--paper); }
+  .cc-dday-chip { display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; padding: 5px 12px; border-radius: 999px; background: var(--ink); color: white; }
+  .cc-dday-chip.soon { background: var(--rose); }
+  .cc-dday-chip.today { background: var(--sage); }
+  .cc-dday-chip .cc-dday-del { background: none; border: none; color: rgba(255,255,255,0.7); cursor: pointer; font-size: 11px; padding: 0 0 0 4px; }
+  .cc-dday-manage { background: #f7f7f9; border-radius: 10px; padding: 10px 14px; margin-bottom: 14px; }
+
+  /* Goals */
+  .cc-goals-section { border: 1px solid var(--line); border-radius: 12px; margin-bottom: 16px; overflow: hidden; }
+  .cc-goals-head { padding: 12px 16px; background: #f7f7f9; cursor: pointer; display: flex; align-items: center; gap: 10px; }
+  .cc-goals-title { font-weight: 700; font-size: 14px; flex: 1; }
+  .cc-goals-count { font-size: 12px; color: var(--ink-soft); }
+  .cc-goals-body { padding: 8px 16px 14px; }
+  .cc-goal-item { display: flex; align-items: center; gap: 8px; padding: 7px 4px; border-bottom: 1px solid #f0f0f3; font-size: 13.5px; }
+  .cc-goal-item:last-child { border-bottom: none; }
+  .cc-goal-item input[type=checkbox] { width: 17px; height: 17px; accent-color: var(--rose); flex: 0 0 auto; cursor: pointer; }
+  .cc-goal-item span.done { text-decoration: line-through; color: var(--ink-soft); }
+  .cc-goal-semester { font-size: 11px; padding: 2px 7px; border-radius: 999px; background: var(--rose-soft); color: var(--rose); font-weight: 700; flex: 0 0 auto; }
+
+  /* Subject tasks */
+  .cc-tasks-toggle { background: none; border: none; font-size: 12px; color: var(--sage); cursor: pointer; padding: 6px 16px; font-family: var(--body); font-weight: 600; display: block; width: 100%; text-align: left; border-top: 1px dashed var(--line); }
+  .cc-tasks-toggle:hover { background: var(--sage-soft); }
+  .cc-tasks-area { padding: 10px 16px 12px; background: #fafbf9; }
+  .cc-task-item { display: flex; align-items: flex-start; gap: 8px; padding: 6px 2px; font-size: 13px; border-bottom: 1px solid #f0f0f3; }
+  .cc-task-item:last-child { border-bottom: none; }
+  .cc-task-item input[type=checkbox] { margin-top: 2px; width: 16px; height: 16px; accent-color: var(--rose); flex: 0 0 auto; cursor: pointer; }
+  .cc-task-text { flex: 1; }
+  .cc-task-text.done { text-decoration: line-through; color: var(--ink-soft); }
+  .cc-task-add { display: flex; gap: 6px; margin-top: 8px; }
+  .cc-task-add input { flex: 1; border: 1px solid var(--line); border-radius: 8px; padding: 6px 10px; font-size: 12.5px; font-family: var(--body); }
+  .cc-task-add button { border: none; background: var(--sage); color: white; border-radius: 8px; padding: 6px 12px; font-size: 12.5px; cursor: pointer; }
+
+  /* Dictionary */
+  .cc-dict-search-wrap { margin-bottom: 12px; }
+  .cc-dict-search { border: 1px solid var(--line); border-radius: 10px; padding: 10px 14px; font-size: 14px; font-family: var(--body); width: 100%; box-sizing: border-box; outline: none; }
+  .cc-dict-search:focus { border-color: var(--ink); }
+  .cc-dict-form { border: 1px solid var(--line); border-radius: 12px; padding: 14px; margin-bottom: 16px; background: #fafaf9; }
+  .cc-dict-form input, .cc-dict-form textarea { width: 100%; border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; font-size: 13.5px; font-family: var(--body); margin-bottom: 8px; box-sizing: border-box; background: white; outline: none; }
+  .cc-dict-form textarea { min-height: 90px; resize: vertical; }
+  .cc-dict-entry { border: 1px solid var(--line); border-radius: 10px; padding: 14px; margin-bottom: 10px; }
+  .cc-dict-term { font-family: var(--display); font-size: 16px; font-weight: 700; margin-bottom: 6px; color: var(--ink); display: flex; justify-content: space-between; align-items: flex-start; }
+  .cc-dict-def { font-size: 13.5px; line-height: 1.65; color: var(--ink); white-space: pre-wrap; margin-bottom: 6px; }
+  .cc-dict-src { font-size: 11.5px; color: var(--ink-soft); }
+
+  /* Reading notes */
+  .cc-book-form { border: 1px solid var(--line); border-radius: 12px; padding: 14px; margin-bottom: 16px; background: #fafaf9; }
+  .cc-book-form input, .cc-book-form textarea, .cc-book-form select { width: 100%; border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; font-size: 13.5px; font-family: var(--body); margin-bottom: 8px; box-sizing: border-box; background: white; outline: none; }
+  .cc-book-form textarea { min-height: 80px; resize: vertical; }
+  .cc-form-label { font-size: 12px; font-weight: 700; color: var(--ink-soft); margin-bottom: 3px; display: block; }
+  .cc-form-save-btn { border: none; background: var(--rose); color: white; border-radius: 8px; padding: 9px 18px; font-size: 13px; cursor: pointer; font-family: var(--body); font-weight: 600; }
+  .cc-book-card { border: 1px solid var(--line); border-radius: 10px; padding: 14px; margin-bottom: 10px; }
+  .cc-book-card-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; margin-bottom: 6px; }
+  .cc-book-title { font-family: var(--display); font-size: 15px; font-weight: 700; }
+  .cc-book-author { font-size: 12px; color: var(--ink-soft); margin-bottom: 8px; }
+  .cc-book-type-badge { font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 999px; background: var(--sage-soft); color: var(--sage); flex: 0 0 auto; }
+  .cc-book-section-label { font-size: 11.5px; font-weight: 700; color: var(--ink-soft); margin: 8px 0 3px; }
+  .cc-book-text { font-size: 13px; line-height: 1.6; white-space: pre-wrap; color: var(--ink); }
 </style>
 
 <div class="cc-header">
@@ -473,9 +565,10 @@
   </svg>
   <div class="cc-title-block">
     <p class="cc-title">Counseling Compass</p>
-    <p class="cc-sub">기초를 다지는 한 학기 — 3학차 복학까지</p>
+    <p class="cc-sub">상담자가 되어가는 평생 학습 시스템</p>
   </div>
 </div>
+<div id="cc-dday-bar" class="cc-dday-bar"></div>
 
 <div class="cc-tabs-wrap">
   <div class="cc-tabs" id="cc-tabs-row"></div>
@@ -486,7 +579,37 @@
   <div id="cc-loading" class="cc-loading">불러오는 중…</div>
 
   <div id="cc-panel-planner" class="cc-hidden">
+    <div id="cc-goals-section" class="cc-goals-section">
+      <div class="cc-goals-head" id="cc-goals-head">
+        <span class="cc-caret" id="cc-goals-caret">▾</span>
+        <span class="cc-goals-title">🎯 학기 목표</span>
+        <span id="cc-goals-count" class="cc-goals-count"></span>
+      </div>
+      <div class="cc-goals-body" id="cc-goals-body">
+        <div id="cc-goals-list"></div>
+        <div class="cc-add-row" style="padding:6px 0 0;">
+          <input id="cc-goal-input" type="text" placeholder="새 목표 입력…" maxlength="80"/>
+          <select id="cc-goal-semester" style="flex:0 0 auto;border:1px solid var(--line);border-radius:8px;padding:7px 6px;font-size:12.5px;font-family:var(--body);">
+            <option value="1학차">1학차</option>
+            <option value="2학차">2학차</option>
+            <option value="3학차" selected>3학차</option>
+            <option value="4학차">4학차</option>
+            <option value="전체">전체</option>
+          </select>
+          <button id="cc-goal-add-btn">추가</button>
+        </div>
+      </div>
+    </div>
+    <div id="cc-dday-manage" class="cc-dday-manage">
+      <div id="cc-dday-chips"></div>
+      <div class="cc-add-row" style="padding:0 0 12px;">
+        <input id="cc-dday-label" type="text" placeholder="이름 (예: 복학)" maxlength="20" style="flex:0 0 100px"/>
+        <input id="cc-dday-date" type="date"/>
+        <button id="cc-dday-add-btn">추가</button>
+      </div>
+    </div>
     <div id="cc-credits-total" class="cc-credits-total" style="display:none"></div>
+    <div id="cc-grad-track" class="cc-grad-track"></div>
     <div id="cc-subjects"></div>
     <div class="cc-new-subject">
       <input id="cc-new-subject-input" type="text" placeholder="새 과목 추가 (예: 상담윤리)" maxlength="40"/>
@@ -523,12 +646,51 @@
     <div id="cc-qual-list"></div>
   </div>
 
+  <div id="cc-panel-dict" class="cc-hidden">
+    <div class="cc-dict-search-wrap">
+      <input class="cc-dict-search" id="cc-dict-search" type="text" placeholder="🔍 용어 검색…"/>
+    </div>
+    <div class="cc-dict-form" id="cc-dict-form">
+      <label class="cc-form-label">용어</label>
+      <input id="cc-dict-term" type="text" placeholder="예: 전이 (Transference)" maxlength="80"/>
+      <label class="cc-form-label">정의</label>
+      <textarea id="cc-dict-def" placeholder="나만의 말로 정의해보세요…"></textarea>
+      <label class="cc-form-label">출처 / 이론 (선택)</label>
+      <input id="cc-dict-src" type="text" placeholder="예: 정신분석이론, 상담이론과 실제 p.42"/>
+      <button class="cc-form-save-btn" id="cc-dict-save-btn">사전에 추가</button>
+    </div>
+    <div id="cc-dict-list"></div>
+  </div>
+
+  <div id="cc-panel-reading" class="cc-hidden">
+    <div class="cc-book-form" id="cc-book-form">
+      <label class="cc-form-label">책 / 논문 제목</label>
+      <input id="cc-book-title" type="text" placeholder="예: 상담심리학의 이론과 실제"/>
+      <label class="cc-form-label">저자</label>
+      <input id="cc-book-author" type="text" placeholder="예: 천성문 외"/>
+      <label class="cc-form-label">유형</label>
+      <select id="cc-book-type">
+        <option value="book">📗 책</option>
+        <option value="paper">📄 논문</option>
+        <option value="article">📰 아티클</option>
+        <option value="other">기타</option>
+      </select>
+      <label class="cc-form-label">핵심 내용</label>
+      <textarea id="cc-book-key" placeholder="핵심 개념, 인상 깊은 내용…" style="min-height:80px"></textarea>
+      <label class="cc-form-label">나의 생각 / 적용점</label>
+      <textarea id="cc-book-reflection" placeholder="상담 공부나 실습에 어떻게 연결할 수 있을지…" style="min-height:70px"></textarea>
+      <button class="cc-form-save-btn" id="cc-book-save-btn">독서노트 추가</button>
+    </div>
+    <div id="cc-book-list"></div>
+  </div>
+
   <div id="cc-panel-notes" class="cc-hidden">
     <div class="cc-note-form">
       <div class="cc-tag-row" id="cc-tag-row">
         <button class="cc-tag-btn selected" data-tag="idea">논문 아이디어</button>
         <button class="cc-tag-btn" data-tag="question">질문</button>
         <button class="cc-tag-btn" data-tag="thought">생각</button>
+        <button class="cc-tag-btn" data-tag="supervision">수퍼비전</button>
       </div>
       <textarea id="cc-note-input" placeholder="지금 떠오른 생각이나 질문을 적어보세요…"></textarea>
       <div class="cc-note-form-foot">
@@ -540,6 +702,7 @@
       <button class="cc-tag-btn" data-filter="idea">논문 아이디어</button>
       <button class="cc-tag-btn" data-filter="question">질문</button>
       <button class="cc-tag-btn" data-filter="thought">생각</button>
+      <button class="cc-tag-btn" data-filter="supervision">수퍼비전</button>
     </div>
     <div id="cc-notes-list"></div>
   </div>
@@ -605,13 +768,13 @@
 
   const GRAD_COURSE_SUBJECTS = [
     { id: 'g1', name: '1학차 수강과목', topics: [
-      { id: 'g1t1', name: '가족상담 및 치료', done: true, memo: '', credits: 3 },
-      { id: 'g1t2', name: '상담이론과 실제', done: true, memo: '', credits: 3 },
+      { id: 'g1t1', name: '가족상담 및 치료', done: true, memo: '', credits: 3, courseType: 'adv' },
+      { id: 'g1t2', name: '상담이론과 실제', done: true, memo: '', credits: 3, courseType: 'adv' },
     ]},
     { id: 'g2', name: '2학차 수강과목', topics: [
-      { id: 'g2t1', name: '상담윤리', done: true, memo: '', credits: 3 },
-      { id: 'g2t2', name: '이상심리 및 심리치료', done: true, memo: '', credits: 3 },
-      { id: 'g2t3', name: '실존과 심리치료의 만남', done: true, memo: '', credits: 2 },
+      { id: 'g2t1', name: '상담윤리', done: true, memo: '', credits: 3, courseType: 'adv' },
+      { id: 'g2t2', name: '이상심리 및 심리치료', done: true, memo: '', credits: 3, courseType: 'adv' },
+      { id: 'g2t3', name: '실존과 심리치료의 만남', done: true, memo: '', credits: 2, courseType: 'elec' },
     ]},
   ];
 
@@ -706,8 +869,10 @@
     daily: '일별 체크',
     qual: '자격 체크',
     notes: '연구노트',
+    dict: '상담사전',
+    reading: '독서노트',
   };
-  const DEFAULT_TAB_ORDER = ['daily', 'planner', 'qual', 'notes'];
+  const DEFAULT_TAB_ORDER = ['daily', 'planner', 'notes', 'dict', 'reading', 'qual'];
 
   let subjects = [];
   let notes = [];
@@ -716,14 +881,21 @@
   let tabOrder = [...DEFAULT_TAB_ORDER];
   let activeTab = tabOrder[0];
   let tabEditMode = false;
-  let qualExpanded = new Set(); // { 'YYYY-MM-DD': { studied: bool, memo: string } }
+  let qualExpanded = new Set();
+  let ddays = [];       // [{id, label, date}]
+  let goals = [];       // [{id, semester, text, done}]
+  let dictEntries = []; // [{id, term, definition, source, created}]
+  let readingEntries = []; // [{id, title, author, type, keyPoints, reflection, created}]
+  let subjectTasks = {}; // {subjectId: [{id, text, done}]}
+  let dictSearch = '';
+  let goalsOpen = true; // { 'YYYY-MM-DD': { studied: bool, memo: string } }
   let selectedTag = 'idea';
   let selectedFilter = 'all';
   let calViewDate = new Date();
   let selectedDay = todayKey();
   const uid = () => 'id' + Date.now().toString(36) + Math.random().toString(36).slice(2,7);
 
-  const tagLabel = { idea: '논문 아이디어', question: '질문', thought: '생각' };
+  const tagLabel = { idea: '논문 아이디어', question: '질문', thought: '생각', supervision: '수퍼비전' };
 
   function todayKey() {
     const d = new Date();
@@ -750,16 +922,12 @@
       const q = await window.storage.get('qual-checks', false);
       qualChecks = q ? JSON.parse(q.value) : {};
     } catch(e) { qualChecks = {}; }
-    try {
-      const to = await window.storage.get('tab-order', false);
-      if (to) {
-        const parsed = JSON.parse(to.value);
-        // sanity check: must contain exactly the known tab keys
-        if (Array.isArray(parsed) && parsed.length === Object.keys(TAB_DEFS).length && parsed.every(k => TAB_DEFS[k])) {
-          tabOrder = parsed;
-        }
-      }
-    } catch(e) { /* keep default */ }
+    try { const to = await window.storage.get('tab-order', false); if (to) { const parsed = JSON.parse(to.value); if (Array.isArray(parsed) && parsed.every(k => TAB_DEFS[k])) tabOrder = parsed; } } catch(e) {}
+    try { const d = await window.storage.get('ddays', false); ddays = d ? JSON.parse(d.value) : [{id:'dd1', label:'복학', date:'2026-08-24'}]; } catch(e) { ddays = [{id:'dd1', label:'복학', date:'2026-08-24'}]; }
+    try { const g = await window.storage.get('goals', false); goals = g ? JSON.parse(g.value) : []; } catch(e) { goals = []; }
+    try { const di = await window.storage.get('dict-entries', false); dictEntries = di ? JSON.parse(di.value) : []; } catch(e) { dictEntries = []; }
+    try { const re = await window.storage.get('reading-entries', false); readingEntries = re ? JSON.parse(re.value) : []; } catch(e) { readingEntries = []; }
+    try { const st = await window.storage.get('subject-tasks', false); subjectTasks = st ? JSON.parse(st.value) : {}; } catch(e) { subjectTasks = {}; }
     activeTab = tabOrder[0];
 
     // migrate: add grad course subjects once if not present
@@ -788,14 +956,21 @@
     renderCalendar();
     renderStreak();
     renderQual();
+    renderDdays();
+    renderGoals();
+    renderDict();
+    renderReading();
+    renderGradTrack();
     selectDay(todayKey());
     updateCompass();
   }
 
-  async function saveTabOrder() {
-    try { await window.storage.set('tab-order', JSON.stringify(tabOrder), false); }
-    catch(e) { console.error('save failed', e); }
-  }
+  async function saveDdays()        { try { await window.storage.set('ddays', JSON.stringify(ddays), false); showToast('저장됨'); } catch(e) {} }
+  async function saveGoals()        { try { await window.storage.set('goals', JSON.stringify(goals), false); showToast('저장됨'); } catch(e) {} }
+  async function saveDictEntries()  { try { await window.storage.set('dict-entries', JSON.stringify(dictEntries), false); showToast('저장됨'); } catch(e) {} }
+  async function saveReadingEntries(){ try { await window.storage.set('reading-entries', JSON.stringify(readingEntries), false); showToast('저장됨'); } catch(e) {} }
+  async function saveSubjectTasks() { try { await window.storage.set('subject-tasks', JSON.stringify(subjectTasks), false); showToast('저장됨'); } catch(e) {} }
+  async function saveTabOrder()     { try { await window.storage.set('tab-order', JSON.stringify(tabOrder), false); } catch(e) {} }
 
   function renderTabs() {
     const row = document.getElementById('cc-tabs-row');
@@ -841,8 +1016,9 @@
   }
 
   function showActivePanel() {
-    Object.keys(TAB_DEFS).forEach(key => {
-      document.getElementById(`cc-panel-${key}`).classList.toggle('cc-hidden', key !== activeTab);
+    ['planner','daily','qual','notes','dict','reading'].forEach(key => {
+      const el = document.getElementById(`cc-panel-${key}`);
+      if (el) el.classList.toggle('cc-hidden', key !== activeTab);
     });
   }
 
@@ -974,6 +1150,43 @@
     return Math.round((s.topics.filter(t => t.done).length / s.topics.length) * 100);
   }
 
+  function renderGradTrack() {
+    const el = document.getElementById('cc-grad-track');
+    if (!el) return;
+    const gradSubjects = subjects.filter(s => s.name.includes('수강과목'));
+    if (!gradSubjects.length) { el.style.display = 'none'; return; }
+    el.style.display = '';
+
+    let total = 0, reqTotal = 0, advTotal = 0;
+    gradSubjects.forEach(s => s.topics.forEach(t => {
+      const c = Number(t.credits) || 0;
+      total += c;
+      if (t.courseType === 'req') reqTotal += c;
+      if (t.courseType === 'adv') advTotal += c;
+    }));
+
+    const GRAD_REQ = 30, REQ_MIN = 3, ADV_MIN = 9;
+    const totalPct = Math.min(100, Math.round(total / GRAD_REQ * 100));
+    const reqPct   = Math.min(100, Math.round(reqTotal / REQ_MIN * 100));
+    const advPct   = Math.min(100, Math.round(advTotal / ADV_MIN * 100));
+
+    el.innerHTML = `
+      <div class="cc-grad-track-title">🎓 졸업 이수학점 현황</div>
+      <div class="cc-grad-bar-row">
+        <div class="cc-grad-bar-label"><span>총 이수학점 <strong>${total}학점</strong></span><span style="font-weight:700;color:var(--ink)">${totalPct}% <small style="font-weight:400;color:var(--ink-soft)">/ 30학점</small></span></div>
+        <div class="cc-grad-bar-wrap"><div class="cc-grad-bar-fill total" style="width:${totalPct}%"></div></div>
+      </div>
+      <div class="cc-grad-bar-row">
+        <div class="cc-grad-bar-label"><span>전공필수 <strong>${reqTotal}학점</strong></span><span style="font-weight:700;color:var(--rose)">${reqPct}% <small style="font-weight:400;color:var(--ink-soft)">/ 3학점 이상</small></span></div>
+        <div class="cc-grad-bar-wrap"><div class="cc-grad-bar-fill req" style="width:${reqPct}%"></div></div>
+      </div>
+      <div class="cc-grad-bar-row">
+        <div class="cc-grad-bar-label"><span>전공심화 <strong>${advTotal}학점</strong></span><span style="font-weight:700;color:var(--sage)">${advPct}% <small style="font-weight:400;color:var(--ink-soft)">/ 9학점 이상</small></span></div>
+        <div class="cc-grad-bar-wrap"><div class="cc-grad-bar-fill adv" style="width:${advPct}%"></div></div>
+      </div>
+    `;
+  }
+
   function renderCreditsTotal() {
     const el = document.getElementById('cc-credits-total');
     // Only count subjects that are "수강과목" (grad enrolled)
@@ -993,6 +1206,7 @@
       <span>학점 이수</span>
       <span class="cc-credits-breakdown">${breakdown}</span>
     `;
+    renderGradTrack();
   }
 
   function renderSubjects() {
@@ -1028,14 +1242,29 @@
               <input type="checkbox" ${t.done ? 'checked' : ''} data-check="${s.id}|${t.id}"/>
               <span class="cc-topic-text ${t.done ? 'done' : ''}">${escapeHtml(t.name)}</span>
               ${isGrad && t.credits ? `<span class="cc-credit-badge">${t.credits}학점</span>` : ''}
+              ${isGrad && t.courseType ? `<span class="cc-course-type ${t.courseType}">${t.courseType === 'req' ? '전공필수' : t.courseType === 'adv' ? '전공심화' : '전공선택'}</span>` : ''}
               <button class="cc-memo-toggle ${t.memo ? 'has-memo' : ''}" data-memotoggle="${s.id}|${t.id}" title="메모">✎</button>
               <button class="cc-del-btn" data-deltopic="${s.id}|${t.id}">삭제</button>
               <textarea class="cc-topic-memo" placeholder="이 항목에 대한 메모…" data-memo="${s.id}|${t.id}">${escapeHtml(t.memo || '')}</textarea>
             </div>
           `).join('') || '<div class="cc-empty" style="padding:14px 0;">항목이 없어요</div>'}
+          </div>
+          <button class="cc-tasks-toggle" data-taskstoggle="${s.id}">📋 과제 & 메모</button>
+          <div class="cc-tasks-area" id="cc-tasks-${s.id}" style="display:none">
+            <div id="cc-task-list-${s.id}">${renderTasksInline(s)}</div>
+            <div class="cc-task-add">
+              <input type="text" placeholder="과제나 메모 추가…" data-newtask="${s.id}" maxlength="100"/>
+              <button data-addtask="${s.id}">추가</button>
+            </div>
+          </div>
           <div class="cc-add-row">
-            <input type="text" placeholder="새 항목 추가" data-newtopic="${s.id}" maxlength="60"/>
-            ${isGrad ? `<label class="credits-label">학점 <input type="number" class="credits-input" data-newcredits="${s.id}" min="1" max="6" value="3"/></label>` : ''}
+          <input type="text" placeholder="새 항목 추가" data-newtopic="${s.id}" maxlength="60"/>
+            ${isGrad ? `<label class="credits-label">학점 <input type="number" class="credits-input" data-newcredits="${s.id}" min="1" max="6" value="3"/></label>
+              <select data-newcoursetype="${s.id}" style="border:1px solid var(--line);border-radius:8px;padding:7px 6px;font-size:12px;font-family:var(--body);">
+                <option value="elec">전공선택</option>
+                <option value="req">전공필수</option>
+                <option value="adv">전공심화</option>
+              </select>` : ''}
             <button data-addtopic="${s.id}">추가</button>
           </div>
         </div>
@@ -1129,8 +1358,10 @@
         if (!val) return;
         const s = subjects.find(x => x.id === sid);
         const creditsInput = root.querySelector(`[data-newcredits="${sid}"]`);
+        const courseTypeInput = root.querySelector(`[data-newcoursetype="${sid}"]`);
         const credits = creditsInput ? (Number(creditsInput.value) || 3) : 0;
-        s.topics.push({ id: uid(), name: val, done: false, memo: '', credits });
+        const courseType = courseTypeInput ? courseTypeInput.value : 'elec';
+        s.topics.push({ id: uid(), name: val, done: false, memo: '', credits, courseType });
         input.value = '';
         await saveSubjects();
         renderSubjects();
@@ -1147,6 +1378,7 @@
     const qualRefEl = document.getElementById('cc-qual-ref');
     if (qualRefEl) renderQualRef();
     renderCreditsTotal();
+    bindTaskListeners(root);
   }
 
   document.getElementById('cc-new-subject-btn').addEventListener('click', async () => {
@@ -1184,12 +1416,14 @@
     root.innerHTML = Object.entries(QUAL_DEFS).map(([orgKey, org]) => {
       const groupsHtml = org.groups.map(g => {
         const checkedCount = g.items.filter(it => qualChecks[`${orgKey}|${g.key}|${it.name}`]).length;
-        const short = checkedCount < g.need;
+        const pct = Math.min(100, Math.round(checkedCount / g.need * 100));
+        const isDone = checkedCount >= g.need;
         return `
           <div class="cc-qual-group-label">
             ${escapeHtml(g.label)}
-            <span class="cc-qual-count ${short ? 'short' : ''}">${checkedCount}/${g.need}</span>
+            <span class="cc-qual-pct ${isDone ? 'done' : 'warn'}">${pct}%${isDone ? ' ✓' : ''}</span>
           </div>
+          <div class="cc-qual-prog-wrap"><div class="cc-qual-prog-fill ${isDone ? 'done' : 'warn'}" style="width:${pct}%"></div></div>
           ${g.items.map(it => {
             const key = `${orgKey}|${g.key}|${it.name}`;
             const checked = !!qualChecks[key];
@@ -1211,10 +1445,15 @@
       if (org.tracker) {
         const t = org.tracker;
         const checkedCount = t.items.filter(it => qualChecks[`${orgKey}|tracker|${it}`]).length;
+        const trackerPct = Math.min(100, Math.round(checkedCount / t.items.length * 100));
         trackerHtml = `
           <div class="cc-qual-group-label">
             ${escapeHtml(t.label)}
-            <span class="cc-qual-count">${checkedCount}/${t.items.length}</span>
+            <span class="cc-qual-pct ${trackerPct === 100 ? 'done' : 'warn'}">${trackerPct}%${trackerPct === 100 ? ' ✓' : ''}</span>
+          </div>
+          <div class="cc-tracker-prog">
+            <div class="cc-tracker-prog-bar"><div class="cc-tracker-prog-fill" style="width:${trackerPct}%"></div></div>
+            <span class="cc-tracker-pct">${checkedCount}/${t.items.length}</span>
           </div>
           ${t.items.map(it => {
             const key = `${orgKey}|tracker|${it}`;
@@ -1341,6 +1580,208 @@
     await saveNotes();
     renderNotes();
     updateCompass();
+  });
+
+  // ── D-Day ────────────────────────────────────────────────────────────────
+  function renderDdays() {
+    const bar = document.getElementById('cc-dday-bar');
+    const chips = document.getElementById('cc-dday-chips');
+    const today = new Date(); today.setHours(0,0,0,0);
+    const html = ddays.map(d => {
+      const target = new Date(d.date + 'T00:00:00');
+      const diff = Math.round((target - today) / 86400000);
+      const label = diff > 0 ? `D-${diff}` : diff === 0 ? 'D-DAY' : `D+${Math.abs(diff)}`;
+      const cls = diff <= 7 && diff >= 0 ? 'cc-dday-chip soon' : diff === 0 ? 'cc-dday-chip today' : 'cc-dday-chip';
+      return `<span class="${cls}">${escapeHtml(d.label)} ${label}<button class="cc-dday-del" data-deldday="${d.id}">✕</button></span>`;
+    }).join('');
+    if (bar) bar.innerHTML = html;
+    if (chips) chips.innerHTML = html;
+    document.querySelectorAll('[data-deldday]').forEach(el => {
+      el.addEventListener('click', async (e) => {
+        e.stopPropagation();
+        ddays = ddays.filter(d => d.id !== el.getAttribute('data-deldday'));
+        await saveDdays(); renderDdays();
+      });
+    });
+  }
+  document.getElementById('cc-dday-add-btn') && document.getElementById('cc-dday-add-btn').addEventListener('click', async () => {
+    const label = document.getElementById('cc-dday-label').value.trim();
+    const date = document.getElementById('cc-dday-date').value;
+    if (!label || !date) return;
+    ddays.push({ id: uid(), label, date });
+    document.getElementById('cc-dday-label').value = '';
+    document.getElementById('cc-dday-date').value = '';
+    await saveDdays(); renderDdays();
+  });
+
+  // ── Goals ────────────────────────────────────────────────────────────────
+  function renderGoals() {
+    const list = document.getElementById('cc-goals-list');
+    const count = document.getElementById('cc-goals-count');
+    const body = document.getElementById('cc-goals-body');
+    const caret = document.getElementById('cc-goals-caret');
+    if (!list) return;
+    const done = goals.filter(g => g.done).length;
+    if (count) count.textContent = `${done}/${goals.length}`;
+    if (caret) caret.textContent = goalsOpen ? '▾' : '▸';
+    if (body) body.style.display = goalsOpen ? '' : 'none';
+    list.innerHTML = goals.map(g => `
+      <div class="cc-goal-item">
+        <input type="checkbox" ${g.done ? 'checked' : ''} data-goalcheck="${g.id}"/>
+        <span class="${g.done ? 'done' : ''}">${escapeHtml(g.text)}</span>
+        <span class="cc-goal-semester">${escapeHtml(g.semester)}</span>
+        <button class="cc-del-btn" data-goaldelete="${g.id}">삭제</button>
+      </div>`).join('') || '<div style="font-size:13px;color:var(--ink-soft);padding:8px 0;">아직 목표가 없어요. 추가해보세요!</div>';
+    list.querySelectorAll('[data-goalcheck]').forEach(el => {
+      el.addEventListener('change', async () => {
+        goals.find(g => g.id === el.getAttribute('data-goalcheck')).done = el.checked;
+        await saveGoals(); renderGoals();
+      });
+    });
+    list.querySelectorAll('[data-goaldelete]').forEach(el => {
+      el.addEventListener('click', async () => {
+        goals = goals.filter(g => g.id !== el.getAttribute('data-goaldelete'));
+        await saveGoals(); renderGoals();
+      });
+    });
+  }
+  document.getElementById('cc-goals-head') && document.getElementById('cc-goals-head').addEventListener('click', () => {
+    goalsOpen = !goalsOpen; renderGoals();
+  });
+  document.getElementById('cc-goal-add-btn') && document.getElementById('cc-goal-add-btn').addEventListener('click', async () => {
+    const text = document.getElementById('cc-goal-input').value.trim();
+    const semester = document.getElementById('cc-goal-semester').value;
+    if (!text) return;
+    goals.push({ id: uid(), text, semester, done: false });
+    document.getElementById('cc-goal-input').value = '';
+    await saveGoals(); renderGoals();
+  });
+  document.getElementById('cc-goal-input') && document.getElementById('cc-goal-input').addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('cc-goal-add-btn').click(); });
+
+  // ── Subject Tasks ────────────────────────────────────────────────────────
+  function renderTasksInline(s) {
+    const tasks = subjectTasks[s.id] || [];
+    return tasks.map(t => `
+      <div class="cc-task-item">
+        <input type="checkbox" ${t.done ? 'checked' : ''} data-taskcheck="${s.id}|${t.id}"/>
+        <span class="cc-task-text ${t.done ? 'done' : ''}">${escapeHtml(t.text)}</span>
+        <button class="cc-del-btn" data-taskdelete="${s.id}|${t.id}">삭제</button>
+      </div>`).join('') || '<div style="font-size:12.5px;color:var(--ink-soft);padding:4px 0;">아직 과제나 메모가 없어요.</div>';
+  }
+
+  function bindTaskListeners(root) {
+    root.querySelectorAll('[data-taskstoggle]').forEach(el => {
+      el.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const sid = el.getAttribute('data-taskstoggle');
+        const area = document.getElementById(`cc-tasks-${sid}`);
+        if (area) { const open = area.style.display === 'none'; area.style.display = open ? '' : 'none'; el.style.color = open ? 'var(--rose)' : 'var(--sage)'; }
+      });
+    });
+    root.querySelectorAll('[data-taskcheck]').forEach(el => {
+      el.addEventListener('change', async () => {
+        const [sid, tid] = el.getAttribute('data-taskcheck').split('|');
+        const t = (subjectTasks[sid] || []).find(x => x.id === tid);
+        if (t) t.done = el.checked;
+        await saveSubjectTasks();
+        el.nextElementSibling && el.nextElementSibling.classList.toggle('done', el.checked);
+      });
+    });
+    root.querySelectorAll('[data-taskdelete]').forEach(el => {
+      el.addEventListener('click', async (e) => {
+        e.stopPropagation();
+        const [sid, tid] = el.getAttribute('data-taskdelete').split('|');
+        subjectTasks[sid] = (subjectTasks[sid] || []).filter(x => x.id !== tid);
+        await saveSubjectTasks(); renderSubjects();
+      });
+    });
+    root.querySelectorAll('[data-addtask]').forEach(el => {
+      el.addEventListener('click', async (e) => {
+        e.stopPropagation();
+        const sid = el.getAttribute('data-addtask');
+        const input = root.querySelector(`[data-newtask="${sid}"]`);
+        const text = input ? input.value.trim() : '';
+        if (!text) return;
+        if (!subjectTasks[sid]) subjectTasks[sid] = [];
+        subjectTasks[sid].push({ id: uid(), text, done: false });
+        if (input) input.value = '';
+        await saveSubjectTasks(); renderSubjects();
+        setTimeout(() => { const area = document.getElementById(`cc-tasks-${sid}`); if (area) area.style.display = ''; }, 50);
+      });
+    });
+    root.querySelectorAll('[data-newtask]').forEach(el => {
+      el.addEventListener('click', e => e.stopPropagation());
+      el.addEventListener('keydown', e => { if (e.key === 'Enter') root.querySelector(`[data-addtask="${el.getAttribute('data-newtask')}"]`).click(); });
+    });
+  }
+
+  // ── Dictionary ───────────────────────────────────────────────────────────
+  function renderDict() {
+    const root = document.getElementById('cc-dict-list');
+    if (!root) return;
+    const filtered = dictSearch ? dictEntries.filter(e => e.term.toLowerCase().includes(dictSearch.toLowerCase()) || e.definition.toLowerCase().includes(dictSearch.toLowerCase())) : [...dictEntries];
+    filtered.sort((a,b) => a.term.localeCompare(b.term, 'ko'));
+    if (!filtered.length) { root.innerHTML = `<div class="cc-empty">${dictSearch ? '검색 결과가 없어요.' : '아직 등록된 용어가 없어요. 첫 번째 용어를 추가해보세요!'}</div>`; return; }
+    root.innerHTML = filtered.map(e => `
+      <div class="cc-dict-entry">
+        <div class="cc-dict-term">${escapeHtml(e.term)}<button class="cc-del-btn" data-dictdelete="${e.id}">삭제</button></div>
+        <div class="cc-dict-def">${escapeHtml(e.definition)}</div>
+        ${e.source ? `<div class="cc-dict-src">📚 ${escapeHtml(e.source)}</div>` : ''}
+      </div>`).join('');
+    root.querySelectorAll('[data-dictdelete]').forEach(el => {
+      el.addEventListener('click', async () => {
+        dictEntries = dictEntries.filter(e => e.id !== el.getAttribute('data-dictdelete'));
+        await saveDictEntries(); renderDict();
+      });
+    });
+  }
+  document.getElementById('cc-dict-search') && document.getElementById('cc-dict-search').addEventListener('input', e => { dictSearch = e.target.value; renderDict(); });
+  document.getElementById('cc-dict-save-btn') && document.getElementById('cc-dict-save-btn').addEventListener('click', async () => {
+    const term = document.getElementById('cc-dict-term').value.trim();
+    const def = document.getElementById('cc-dict-def').value.trim();
+    if (!term || !def) return;
+    dictEntries.push({ id: uid(), term, definition: def, source: document.getElementById('cc-dict-src').value.trim(), created: Date.now() });
+    document.getElementById('cc-dict-term').value = '';
+    document.getElementById('cc-dict-def').value = '';
+    document.getElementById('cc-dict-src').value = '';
+    await saveDictEntries(); renderDict();
+  });
+
+  // ── Reading Notes ─────────────────────────────────────────────────────────
+  const bookTypeLabel = { book: '📗 책', paper: '📄 논문', article: '📰 아티클', other: '기타' };
+  function renderReading() {
+    const root = document.getElementById('cc-book-list');
+    if (!root) return;
+    if (!readingEntries.length) { root.innerHTML = '<div class="cc-empty">아직 독서노트가 없어요. 읽은 책이나 논문을 추가해보세요!</div>'; return; }
+    const sorted = [...readingEntries].sort((a,b) => b.created - a.created);
+    root.innerHTML = sorted.map(e => `
+      <div class="cc-book-card">
+        <div class="cc-book-card-head">
+          <div>
+            <div class="cc-book-title">${escapeHtml(e.title)}</div>
+            <div class="cc-book-author">${escapeHtml(e.author)}</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;">
+            <span class="cc-book-type-badge">${escapeHtml(bookTypeLabel[e.type] || e.type)}</span>
+            <button class="cc-del-btn" data-bookdelete="${e.id}">삭제</button>
+          </div>
+        </div>
+        ${e.keyPoints ? `<div class="cc-book-section-label">핵심 내용</div><div class="cc-book-text">${escapeHtml(e.keyPoints)}</div>` : ''}
+        ${e.reflection ? `<div class="cc-book-section-label" style="margin-top:10px;">나의 생각</div><div class="cc-book-text">${escapeHtml(e.reflection)}</div>` : ''}
+      </div>`).join('');
+    root.querySelectorAll('[data-bookdelete]').forEach(el => {
+      el.addEventListener('click', async () => {
+        readingEntries = readingEntries.filter(e => e.id !== el.getAttribute('data-bookdelete'));
+        await saveReadingEntries(); renderReading();
+      });
+    });
+  }
+  document.getElementById('cc-book-save-btn') && document.getElementById('cc-book-save-btn').addEventListener('click', async () => {
+    const title = document.getElementById('cc-book-title').value.trim();
+    if (!title) return;
+    readingEntries.push({ id: uid(), title, author: document.getElementById('cc-book-author').value.trim(), type: document.getElementById('cc-book-type').value, keyPoints: document.getElementById('cc-book-key').value.trim(), reflection: document.getElementById('cc-book-reflection').value.trim(), created: Date.now() });
+    ['cc-book-title','cc-book-author','cc-book-key','cc-book-reflection'].forEach(id => document.getElementById(id).value = '');
+    await saveReadingEntries(); renderReading();
   });
 
   function escapeHtml(str) {
