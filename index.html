@@ -677,10 +677,9 @@
       <label class="cc-form-label">용어</label>
       <div style="display:flex;gap:6px;margin-bottom:8px;">
         <input id="cc-dict-term" type="text" placeholder="예: 전이 (Transference)" maxlength="80" style="margin-bottom:0;flex:1"/>
-        <button class="cc-dict-ai-btn" id="cc-dict-ai-btn" title="AI로 정의 불러오기">🤖 AI 정의</button>
-        <button class="cc-dict-naver-btn" id="cc-dict-naver-btn" title="네이버에서 검색">🔍 검색</button>
+        <button class="cc-dict-ai-btn" id="cc-dict-ai-btn" title="Claude AI에서 검색">🤖 Claude 검색</button>
+        <button class="cc-dict-naver-btn" id="cc-dict-naver-btn" title="네이버에서 검색">🔍 네이버</button>
       </div>
-      <div id="cc-dict-ai-result" class="cc-dict-ai-result" style="display:none"></div>
       <label class="cc-form-label">정의 (직접 입력 또는 AI 결과 수정)</label>
       <textarea id="cc-dict-def" placeholder="나만의 말로 정의해보세요…"></textarea>
       <label class="cc-form-label">출처 / 이론 (선택)</label>
@@ -722,6 +721,7 @@
       </div>
       <textarea id="cc-note-input" placeholder="지금 떠오른 생각이나 질문을 적어보세요…"></textarea>
       <div class="cc-note-form-foot">
+        <button id="cc-note-cancel-btn" style="display:none;background:var(--ink-soft);margin-right:6px;border:none;color:white;border-radius:8px;padding:8px 14px;font-size:13px;cursor:pointer;">취소</button>
         <button id="cc-note-save-btn">기록하기</button>
       </div>
     </div>
@@ -1555,6 +1555,7 @@
 
   let notesPage = 0;
   const NOTES_PER_PAGE = 10;
+  let editingNoteId = null;
 
   function renderNotes() {
     const root = document.getElementById('cc-notes-list');
@@ -1583,6 +1584,7 @@
           <span class="cc-note-tag">${tagLabel[n.tag] || n.tag}</span>
           <span class="cc-note-spacer"></span>
           <span class="cc-note-date">${formatDate(n.created)}</span>
+          <button class="cc-del-btn" data-editnote="${n.id}" style="color:var(--sage);opacity:1">수정</button>
           <button class="cc-del-btn" data-delnote="${n.id}">삭제</button>
         </div>
         <div class="cc-note-text">${escapeHtml(n.text)}</div>
@@ -1593,6 +1595,24 @@
         <button class="cc-pager-btn" id="cc-notes-next2" ${notesPage===totalPages-1?'disabled':''}>다음 ›</button>
       </div>` : ''}
     `;
+    root.querySelectorAll('[data-editnote]').forEach(el => {
+      el.addEventListener('click', () => {
+        const id = el.getAttribute('data-editnote');
+        const n = notes.find(x => x.id === id);
+        if (!n) return;
+        editingNoteId = id;
+        document.getElementById('cc-note-input').value = n.text;
+        document.getElementById('cc-note-save-btn').textContent = '수정 완료';
+        document.getElementById('cc-note-cancel-btn').style.display = '';
+        // set tag
+        selectedTag = n.tag;
+        document.getElementById('cc-tag-row').querySelectorAll('.cc-tag-btn').forEach(b => {
+          b.classList.toggle('selected', b.getAttribute('data-tag') === n.tag);
+        });
+        document.getElementById('cc-note-input').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        document.getElementById('cc-note-input').focus();
+      });
+    });
     root.querySelectorAll('[data-delnote]').forEach(el => {
       el.addEventListener('click', async () => {
         notes = notes.filter(n => n.id !== el.getAttribute('data-delnote'));
@@ -1623,12 +1643,28 @@
     });
   });
 
+  function resetNoteForm() {
+    document.getElementById('cc-note-input').value = '';
+    document.getElementById('cc-note-save-btn').textContent = '기록하기';
+    document.getElementById('cc-note-cancel-btn').style.display = 'none';
+    editingNoteId = null;
+  }
+
+  document.getElementById('cc-note-cancel-btn').addEventListener('click', () => resetNoteForm());
+
   document.getElementById('cc-note-save-btn').addEventListener('click', async () => {
     const input = document.getElementById('cc-note-input');
     const val = input.value.trim();
     if (!val) return;
-    notes.push({ id: uid(), tag: selectedTag, text: val, created: Date.now() });
-    input.value = '';
+    if (editingNoteId) {
+      // edit mode
+      const n = notes.find(x => x.id === editingNoteId);
+      if (n) { n.text = val; n.tag = selectedTag; }
+      resetNoteForm();
+    } else {
+      notes.push({ id: uid(), tag: selectedTag, text: val, created: Date.now() });
+      input.value = '';
+    }
     await saveNotes();
     renderNotes();
     updateCompass();
@@ -1867,46 +1903,14 @@
   document.getElementById('cc-dict-naver-btn') && document.getElementById('cc-dict-naver-btn').addEventListener('click', () => {
     const term = document.getElementById('cc-dict-term').value.trim();
     if (!term) return alert('용어를 먼저 입력해주세요.');
-    window.open(`https://search.naver.com/search.naver?query=${encodeURIComponent(term + ' 상담 심리')}&where=web`, '_blank');
+    window.open(`https://search.naver.com/search.naver?query=${encodeURIComponent(term)}&where=web`, '_blank');
   });
 
-  document.getElementById('cc-dict-ai-btn') && document.getElementById('cc-dict-ai-btn').addEventListener('click', async () => {
+  document.getElementById('cc-dict-ai-btn') && document.getElementById('cc-dict-ai-btn').addEventListener('click', () => {
     const term = document.getElementById('cc-dict-term').value.trim();
     if (!term) return alert('용어를 먼저 입력해주세요.');
-    const resultEl = document.getElementById('cc-dict-ai-result');
-    const aiBtn = document.getElementById('cc-dict-ai-btn');
-    resultEl.style.display = 'block';
-    resultEl.innerHTML = '<span class="cc-dict-ai-loading">AI가 정의를 생성하는 중…</span>';
-    aiBtn.disabled = true;
-    try {
-      const res = await fetch('https://api.anthropic.com/v1/messages', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          model: 'claude-sonnet-4-6',
-          max_tokens: 600,
-          messages: [{
-            role: 'user',
-            content: `상담심리 대학원생을 위한 상담사전 앱입니다. "${term}"의 상담·심리학적 정의를 한국어로 3~5문장으로 설명해주세요. 핵심 개념, 이론적 배경, 상담 현장에서의 의미를 포함해주세요. 마크다운 없이 평문으로만 답해주세요.`
-          }]
-        })
-      });
-      const data = await res.json();
-      const text = data.content && data.content[0] && data.content[0].text;
-      if (text) {
-        resultEl.innerHTML = `<div class="cc-dict-ai-text">${escapeHtml(text)}</div>
-          <button class="cc-dict-ai-use-btn" id="cc-dict-ai-use-btn">이 정의 사용하기</button>`;
-        document.getElementById('cc-dict-ai-use-btn').addEventListener('click', () => {
-          document.getElementById('cc-dict-def').value = text;
-          resultEl.style.display = 'none';
-        });
-      } else {
-        resultEl.innerHTML = '<span style="color:var(--rose)">정의를 불러오지 못했어요. 직접 입력해주세요.</span>';
-      }
-    } catch(e) {
-      resultEl.innerHTML = '<span style="color:var(--rose)">오류가 발생했어요. 직접 입력해주세요.</span>';
-    }
-    aiBtn.disabled = false;
+    const prompt = `상담심리 대학원생이에요. 상담사전 앱에 저장할 용어 정의를 도와주세요.\n\n"${term}"의 상담·심리학적 정의를 한국어로 3~5문장으로 설명해주세요. 핵심 개념, 이론적 배경, 상담 현장에서의 의미를 포함해주세요.`;
+    window.open(`https://claude.ai/new?q=${encodeURIComponent(prompt)}`, '_blank');
   });
   document.getElementById('cc-dict-save-btn') && document.getElementById('cc-dict-save-btn').addEventListener('click', async () => {
     const term = document.getElementById('cc-dict-term').value.trim();
