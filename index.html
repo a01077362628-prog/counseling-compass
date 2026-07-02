@@ -539,10 +539,55 @@
   .cc-dict-form { border: 1px solid var(--line); border-radius: 12px; padding: 14px; margin-bottom: 16px; background: #fafaf9; }
   .cc-dict-form input, .cc-dict-form textarea { width: 100%; border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; font-size: 13.5px; font-family: var(--body); margin-bottom: 8px; box-sizing: border-box; background: white; outline: none; }
   .cc-dict-form textarea { min-height: 90px; resize: vertical; }
-  .cc-dict-entry { border: 1px solid var(--line); border-radius: 10px; padding: 14px; margin-bottom: 10px; }
-  .cc-dict-term { font-family: var(--display); font-size: 16px; font-weight: 700; margin-bottom: 6px; color: var(--ink); display: flex; justify-content: space-between; align-items: flex-start; }
-  .cc-dict-def { font-size: 13.5px; line-height: 1.65; color: var(--ink); white-space: pre-wrap; margin-bottom: 6px; }
-  .cc-dict-src { font-size: 11.5px; color: var(--ink-soft); }
+  /* Dictionary cards - redesigned */
+  .cc-dict-entry {
+    border: none; border-radius: 12px; padding: 0; margin-bottom: 12px;
+    background: var(--paper-raised);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.07), 0 0 0 1px var(--line);
+    overflow: hidden;
+  }
+  .cc-dict-entry-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 16px 10px;
+    border-bottom: 1px solid var(--line); background: #f9f8f7;
+    gap: 10px;
+  }
+  .cc-dict-num { font-size: 12px; font-weight: 700; color: var(--rose); flex: 0 0 auto; }
+  .cc-dict-term-text {
+    font-family: var(--display); font-size: 17px; font-weight: 700;
+    color: var(--ink); flex: 1; min-width: 0;
+  }
+  .cc-dict-header-right { display: flex; align-items: center; gap: 6px; flex: 0 0 auto; }
+  .cc-dict-datetime { font-size: 11px; color: var(--ink-soft); }
+  .cc-dict-body { padding: 12px 16px; }
+  .cc-dict-def { font-size: 14px; line-height: 1.7; color: var(--ink); white-space: pre-wrap; border-left: 3px solid var(--rose-soft); padding-left: 10px; margin-bottom: 0; }
+  .cc-dict-src { font-size: 11.5px; color: var(--ink-soft); margin-top: 8px; }
+
+  /* Reading note cards - redesigned */
+  .cc-book-card {
+    border: none; border-radius: 12px; margin-bottom: 14px;
+    background: var(--paper-raised);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.07), 0 0 0 1px var(--line);
+    overflow: hidden;
+  }
+  .cc-book-card-header {
+    padding: 12px 16px 10px; border-bottom: 1px solid var(--line);
+    background: #f9f8f7;
+  }
+  .cc-book-card-header-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; margin-bottom: 4px; }
+  .cc-book-title { font-family: var(--display); font-size: 16px; font-weight: 700; color: var(--ink); flex: 1; min-width: 0; }
+  .cc-book-author { font-size: 12.5px; color: var(--ink-soft); margin-top: 2px; }
+  .cc-book-datetime { font-size: 11px; color: var(--ink-soft); margin-top: 2px; }
+  .cc-book-type-badge { font-size: 11.5px; font-weight: 700; padding: 3px 10px; border-radius: 999px; background: var(--sage-soft); color: var(--sage); flex: 0 0 auto; white-space: nowrap; }
+  .cc-book-body { padding: 12px 16px; }
+  .cc-book-section {
+    margin-bottom: 10px; padding: 10px 12px; border-radius: 8px;
+  }
+  .cc-book-section.key { background: #f0f5f1; border-left: 3px solid var(--sage); }
+  .cc-book-section.reflect { background: #f7f3f2; border-left: 3px solid var(--rose); }
+  .cc-book-section-label { font-size: 11px; font-weight: 700; color: var(--ink-soft); letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 5px; }
+  .cc-book-text { font-size: 13.5px; line-height: 1.65; color: var(--ink); white-space: pre-wrap; }
+  .cc-book-card-footer { display: flex; justify-content: flex-end; gap: 4px; padding: 6px 12px 10px; }
 
   /* Reading notes */
   .cc-book-form { border: 1px solid var(--line); border-radius: 12px; padding: 14px; margin-bottom: 16px; background: #fafaf9; }
@@ -551,12 +596,6 @@
   .cc-form-label { font-size: 12px; font-weight: 700; color: var(--ink-soft); margin-bottom: 3px; display: block; }
   .cc-form-save-btn { border: none; background: var(--rose); color: white; border-radius: 8px; padding: 9px 18px; font-size: 13px; cursor: pointer; font-family: var(--body); font-weight: 600; }
   .cc-form-cancel-btn { border: 1px solid var(--line); background: var(--paper); color: var(--ink-soft); border-radius: 8px; padding: 9px 16px; font-size: 13px; cursor: pointer; font-family: var(--body); font-weight: 600; }
-  .cc-book-card { border: 1px solid var(--line); border-radius: 10px; padding: 14px; margin-bottom: 10px; }
-  .cc-book-card-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; margin-bottom: 6px; }
-  .cc-book-title { font-family: var(--display); font-size: 15px; font-weight: 700; }
-  .cc-book-author { font-size: 12px; color: var(--ink-soft); margin-bottom: 8px; }
-  .cc-book-type-badge { font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 999px; background: var(--sage-soft); color: var(--sage); flex: 0 0 auto; }
-  .cc-book-section-label { font-size: 11.5px; font-weight: 700; color: var(--ink-soft); margin: 8px 0 3px; }
   .cc-pager-btn:not(:disabled):hover { background: var(--paper); }
   .cc-dict-ai-btn { background: var(--ink); color: white; border: none; border-radius: 8px; padding: 8px 10px; font-size: 12px; cursor: pointer; font-family: var(--body); white-space: nowrap; }
   .cc-dict-ai-btn:disabled { opacity: 0.5; cursor: wait; }
@@ -1953,17 +1992,19 @@
       </div>
       ${paginated.map((e, i) => `
       <div class="cc-dict-entry">
-        <div class="cc-dict-term">
-          <span style="color:var(--ink-soft);font-size:12px;font-weight:400;margin-right:4px;">${dictPage * DICT_PER_PAGE + i + 1}.</span>
-          ${escapeHtml(e.term)}
-          <div style="display:flex;gap:4px;align-items:center;">
-            <span style="font-size:11px;color:var(--ink-soft);font-weight:400;">${e.created ? formatDateTime(e.created) : ''}</span>
+        <div class="cc-dict-entry-header">
+          <span class="cc-dict-num">${dictPage * DICT_PER_PAGE + i + 1}</span>
+          <span class="cc-dict-term-text">${escapeHtml(e.term)}</span>
+          <div class="cc-dict-header-right">
+            <span class="cc-dict-datetime">${e.created ? formatDateTime(e.created) : ''}</span>
             <button class="cc-del-btn" data-dictedit="${e.id}" style="color:var(--sage);opacity:1">수정</button>
             <button class="cc-del-btn" data-dictdelete="${e.id}">삭제</button>
           </div>
         </div>
-        <div class="cc-dict-def">${escapeHtml(e.definition)}</div>
-        ${e.source ? `<div class="cc-dict-src">📚 ${escapeHtml(e.source)}</div>` : ''}
+        <div class="cc-dict-body">
+          <div class="cc-dict-def">${escapeHtml(e.definition)}</div>
+          ${e.source ? `<div class="cc-dict-src">📚 ${escapeHtml(e.source)}</div>` : ''}
+        </div>
       </div>`).join('')}
       ${totalPages > 1 ? `<div class="cc-notes-meta-bar" style="margin-top:8px">
         <button class="cc-pager-btn" id="cc-dict-prev2" ${dictPage===0?'disabled':''}>‹ 이전</button>
@@ -2073,25 +2114,26 @@
     root.innerHTML = `<div class="cc-notes-meta-bar"><span>총 ${sorted.length}개</span></div>` +
       sorted.map((e, i) => `
       <div class="cc-book-card">
-        <div class="cc-book-card-head">
-          <div style="flex:1;min-width:0;">
-            <div class="cc-book-title">
-              <span style="color:var(--ink-soft);font-size:12px;font-weight:400;margin-right:4px;">${i+1}.</span>
-              ${escapeHtml(e.title)}
+        <div class="cc-book-card-header">
+          <div class="cc-book-card-header-top">
+            <div style="flex:1;min-width:0;">
+              <div class="cc-book-title">
+                <span style="color:var(--rose);font-size:13px;font-weight:700;margin-right:5px;">${i+1}.</span>${escapeHtml(e.title)}
+              </div>
+              ${e.author ? `<div class="cc-book-author">✍ ${escapeHtml(e.author)}</div>` : ''}
+              <div class="cc-book-datetime">🕐 ${e.created ? formatDateTime(e.created) : ''}</div>
             </div>
-            ${e.author ? `<div class="cc-book-author">${escapeHtml(e.author)}</div>` : ''}
-            <div style="font-size:11px;color:var(--ink-soft);margin-top:2px;">${e.created ? formatDateTime(e.created) : ''}</div>
-          </div>
-          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex:0 0 auto;">
             <span class="cc-book-type-badge">${escapeHtml(bookTypeLabel[e.type] || e.type)}</span>
-            <div style="display:flex;gap:4px;">
-              <button class="cc-del-btn" data-bookedit="${e.id}" style="color:var(--sage);opacity:1">수정</button>
-              <button class="cc-del-btn" data-bookdelete="${e.id}">삭제</button>
-            </div>
           </div>
         </div>
-        ${e.keyPoints ? `<div class="cc-book-section-label">핵심 내용</div><div class="cc-book-text">${escapeHtml(e.keyPoints)}</div>` : ''}
-        ${e.reflection ? `<div class="cc-book-section-label" style="margin-top:10px;">나의 생각</div><div class="cc-book-text">${escapeHtml(e.reflection)}</div>` : ''}
+        <div class="cc-book-body">
+          ${e.keyPoints ? `<div class="cc-book-section key"><div class="cc-book-section-label">핵심 내용</div><div class="cc-book-text">${escapeHtml(e.keyPoints)}</div></div>` : ''}
+          ${e.reflection ? `<div class="cc-book-section reflect"><div class="cc-book-section-label">나의 생각</div><div class="cc-book-text">${escapeHtml(e.reflection)}</div></div>` : ''}
+        </div>
+        <div class="cc-book-card-footer">
+          <button class="cc-del-btn" data-bookedit="${e.id}" style="color:var(--sage);opacity:1">수정</button>
+          <button class="cc-del-btn" data-bookdelete="${e.id}">삭제</button>
+        </div>
       </div>`).join('');
 
     root.querySelectorAll('[data-bookedit]').forEach(el => {
